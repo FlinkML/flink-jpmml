@@ -3,11 +3,12 @@ package io.radicalbit.flink.pmml.scala.api
 import java.io.StringReader
 import java.util
 
+import io.radicalbit.flink.pmml.scala.{InputValidationException, JPMMLExtractionException}
 import io.radicalbit.flink.pmml.scala.api.pipeline.Pipeline
 import io.radicalbit.flink.pmml.scala.api.reader.ModelReader
 import io.radicalbit.flink.pmml.scala.models._
 import org.apache.flink.ml.math.Vector
-import org.dmg.pmml.{FieldName, Model}
+import org.dmg.pmml.FieldName
 import org.jpmml.evaluator._
 import org.jpmml.model.{ImportFilter, JAXBUtil}
 import org.xml.sax.InputSource

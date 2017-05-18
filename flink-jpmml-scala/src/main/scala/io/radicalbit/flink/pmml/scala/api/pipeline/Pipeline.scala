@@ -2,6 +2,7 @@ package io.radicalbit.flink.pmml.scala.api.pipeline
 
 import java.util
 
+import io.radicalbit.flink.pmml.scala.InputPreparationException
 import io.radicalbit.flink.pmml.scala.api._
 import io.radicalbit.flink.pmml.scala.models.Prediction
 import org.apache.flink.ml.math.Vector
