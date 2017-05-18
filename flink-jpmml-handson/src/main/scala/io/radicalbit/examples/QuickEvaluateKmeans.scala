@@ -7,8 +7,7 @@ import io.radicalbit.flink.pmml.scala._
 import io.radicalbit.flink.pmml.scala.api.reader.ModelReader
 import org.apache.flink.api.java.utils.ParameterTool
 
-
-object QuickEvaluateKmeans extends EnsureParameters{
+object QuickEvaluateKmeans extends EnsureParameters {
   def main(args: Array[String]): Unit = {
     val params: ParameterTool = ParameterTool.fromArgs(args)
     val env = StreamExecutionEnvironment.getExecutionEnvironment

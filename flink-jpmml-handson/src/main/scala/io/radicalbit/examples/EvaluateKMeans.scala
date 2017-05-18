@@ -7,7 +7,7 @@ import io.radicalbit.flink.pmml.scala.api.reader.ModelReader
 import io.radicalbit.flink.pmml.scala._
 import org.apache.flink.api.java.utils.ParameterTool
 
-object EvaluateKMeans extends EnsureParameters{
+object EvaluateKMeans extends EnsureParameters {
 
   def main(args: Array[String]): Unit = {
     val params: ParameterTool = ParameterTool.fromArgs(args)
