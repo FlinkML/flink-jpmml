@@ -10,13 +10,13 @@ import scala.collection.JavaConversions._
 /**
   * Create A TypeClass Pattern to convert input data from flink, in Map to pass a JPMML
   */
-trait VectorConverter[T] extends Serializable {
+sealed trait VectorConverter[T] extends Serializable {
   def serializeVector(v: T, eval: Evaluator): Map[String, Any]
 }
 
-object VectorConverter {
+private[api] object VectorConverter {
 
-  implicit object VectorToMapbleJpmml extends VectorConverter[Vector] {
+  private[api] implicit object VectorToMapbleJpmml extends VectorConverter[Vector] {
     def serializeVector(v: Vector, eval: Evaluator): PmmlInput = {
       v match {
         case denseVector: DenseVector => DenseVectorMapbleJpmml.serializeVector(denseVector, eval)
@@ -25,7 +25,7 @@ object VectorConverter {
     }
   }
 
-  implicit object DenseVectorMapbleJpmml extends VectorConverter[DenseVector] {
+  private[api] implicit object DenseVectorMapbleJpmml extends VectorConverter[DenseVector] {
     def serializeVector(v: DenseVector, eval: Evaluator): PmmlInput = {
       val getNameInput = getKeyFromModel(eval)
 
@@ -33,7 +33,7 @@ object VectorConverter {
     }
   }
 
-  implicit object SparseVectorMapbleJpmml extends VectorConverter[SparseVector] {
+  private[api] implicit object SparseVectorMapbleJpmml extends VectorConverter[SparseVector] {
     def serializeVector(v: SparseVector, eval: Evaluator): PmmlInput = {
       val getNameInput = getKeyFromModel(eval)
 
@@ -47,7 +47,7 @@ object VectorConverter {
     }
   }
 
-  implicit def portingToFlinkJpmml[T: VectorConverter, E <: Evaluator](dataVector: T, eval: E) =
+  private[api] implicit def portingToFlinkJpmml[T: VectorConverter, E <: Evaluator](dataVector: T, eval: E) =
     implicitly[VectorConverter[T]].serializeVector(dataVector, eval)
 
   /**
@@ -57,7 +57,7 @@ object VectorConverter {
     * @return Seq[String]
     *
     */
-  def getKeyFromModel(evaluator: Evaluator) =
+  private def getKeyFromModel(evaluator: Evaluator) =
     evaluator.getActiveFields.map(_.getName.getValue)
 
 }
