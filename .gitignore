@@ -41,3 +41,5 @@ mainRunner
 
 # IntelliJ specific
 .idea
+
+flink-jpmml-handson/src/main/scala/io/radicalbit/example/
