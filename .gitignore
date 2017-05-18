@@ -1,0 +1,39 @@
+/Flink-JPMML.iml
+/flink-jpmml-handson.iml
+### Java template
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+### Scala template
+*.log
+
+# sbt specific
+.cache
+.history
+.lib/
+dist/*
+target/
+flink-jpmml-handson/target
+flink-jpmml-scala/target
+flink-jpmml-java/target
+lib_managed/
+src_managed/
+project/boot/
+project/plugins/project/
+project/project/
+project/target/
+
+# Scala-IDE specific
+.scala_dependencies
+.worksheet
+
+# IntelliJ specific
+.idea

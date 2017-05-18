@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<PMML version="3.2" xmlns="http://www.dmg.org/PMML-3_2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.dmg.org/PMML-3_2 http://www.dmg.org/v3-2/pmml-3-2.xsd">
+ <Header copyright="Copyright (c) 2012 DMG" description="KMeans cluster model">
+  <Extension name="user" value="DMG" extender="Rattle/PMML"/>
+  <Application name="Rattle/PMML" version="1.2.29"/>
+  <Timestamp>2012-09-27 13:19:09</Timestamp>
+ </Header>
+ <DataDictionary numberOfFields="5">
+  <DataField name="sepal_length" optype="continuous" dataType="double"/>
+  <DataField name="sepal_width" optype="continuous" dataType="double"/>
+  <DataField name="petal_length" optype="continuous" dataType="double"/>
+  <DataField name="petal_width" optype="continuous" dataType="double"/>
+  <DataField name="clazz" optype="categorical" dataType="string">
+   <Value value="Iris-setosa"/>
+   <Value value="Iris-versicolor"/>
+   <Value value="Iris-virginica"/>
+  </DataField>
+ </DataDictionary>
+ <ClusteringModel modelName="KMeans_Model" functionName="clustering" algorithmName="KMeans: Hartigan and Wong" modelClass="centerBased" numberOfClusters="3">
+  <MiningSchema>
+   <MiningField name="sepal_length" usageType="active"/>
+   <MiningField name="sepal_width" usageType="active"/>
+   <MiningField name="petal_length" usageType="active"/>
+   <MiningField name="petal_width" usageType="active"/>
+   <MiningField name="clazz" invalidValueTreatment="asIs" usageType="predicted"/>
+  </MiningSchema>
+  <ComparisonMeasure kind="distance">
+   <squaredEuclidean/>
+  </ComparisonMeasure>
+  <ClusteringField field="sepal_length" compareFunction="absDiff"/>
+  <ClusteringField field="sepal_width" compareFunction="absDiff"/>
+  <ClusteringField field="petal_length" compareFunction="absDiff"/>
+  <ClusteringField field="petal_width" compareFunction="absDiff"/>
+  <Cluster name="1" size="24">
+   <Array n="4" type="real">6.8538461538461535 3.076923076923076 5.715384615384614 2.0538461538461537</Array>
+  </Cluster>
+  <Cluster name="2" size="33">
+   <Array n="4" type="real">5.883606557377049 2.740983606557377 4.388524590163936 1.4344262295081966</Array>
+  </Cluster>
+  <Cluster name="3" size="48">
+   <Array n="4" type="real">5.005999999999999 3.4180000000000006 1.4640000000000002 0.2439999999999999</Array>
+  </Cluster>
+  <Output>
+   <OutputField name="PCluster" optype="clazz" dataType="integer" targetField="clazz" feature="entityId"/>
+  </Output>
+ </ClusteringModel>
+</PMML>
