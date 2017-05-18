@@ -21,9 +21,9 @@ class PmmlModelSpec extends WordSpec with Matchers with PmmlLoaderKit with PmmlE
   private val evaluatorNoOutput = buildEvaluator(getPMMLResource(Source.KmeansPmmlNoOut))
   private val evaluatorStrings = buildEvaluator(getPMMLResource(Source.KmeansPmmlStringFields))
 
-  private val model = PmmlModel(evaluator)
-  private val modelStrings = PmmlModel(evaluatorStrings)
-  private val modelNoOutput = PmmlModel(evaluatorNoOutput)
+  private val model = new PmmlModel(evaluator)
+  private val modelStrings = new PmmlModel(evaluatorStrings)
+  private val modelNoOutput = new PmmlModel(evaluatorNoOutput)
 
   "PmmlModel" should {
 

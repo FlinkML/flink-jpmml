@@ -1,8 +1,12 @@
 package io.radicalbit.flink.pmml.scala.api.pipeline
 
-import io.radicalbit.flink.pmml.scala.api.{InputPreparationException, PmmlModel}
+import java.util
+
+import io.radicalbit.flink.pmml.scala.api._
+import io.radicalbit.flink.pmml.scala.models.Prediction
+import org.apache.flink.ml.math.Vector
 import org.dmg.pmml.FieldName
-import org.jpmml.evaluator.{Evaluator, EvaluatorUtil, FieldValue, ModelField}
+import org.jpmml.evaluator.{EvaluatorUtil, FieldValue, ModelField}
 
 import scala.collection.JavaConversions._
 import scala.collection.mutable
@@ -10,14 +14,32 @@ import scala.util.{Failure, Success, Try}
 
 private[api] trait Pipeline { self: PmmlModel =>
 
-  def prepareAndEmit(outcome: Try[FieldValue], field: FieldName): (FieldName, FieldValue) =
+  def predict[V <: Vector](inputVector: V, replaceNan: Option[Double] = None): Prediction
+
+  private[api] def prepareAndEmit(outcome: Try[FieldValue], field: FieldName): (FieldName, FieldValue) =
     outcome match {
       case Success(value) => (field, value)
       case Failure(_) =>
         throw new InputPreparationException("The " + field.getValue + " field JPMML finalization failed.")
     }
 
-  protected def extractFields(fields: java.util.List[_ <: ModelField],
+  /**
+    * Used to extract all the target fields specified by the PMML document.
+    * @param evaluationResult
+    * @return
+    */
+  private[api] def extractTargetFields(evaluationResult: java.util.Map[FieldName, _]): Seq[(String, Any)] =
+    extractFields(evaluator.getTargetFields, evaluationResult, evaluator)
+
+  /**
+    * Used to extract all the output fields specified by the PMML document.
+    * @param evaluationResult
+    * @return
+    */
+  private[api] def extractOutputFields(evaluationResult: java.util.Map[FieldName, _]): Seq[(String, Any)] =
+    extractFields(evaluator.getOutputFields, evaluationResult, evaluator)
+
+  private[api] def extractFields(fields: java.util.List[_ <: ModelField],
                               evaluationResult: java.util.Map[FieldName, _],
                               evaluator: Evaluator): mutable.Buffer[(String, AnyRef)] =
     for {
