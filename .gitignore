@@ -39,3 +39,4 @@ project/target/
 .idea
 
 flink-jpmml-handson/src/main/scala/io/radicalbit/example/
+flink-jpmml-handson/src/main/scala/io/radicalbit/examples/
