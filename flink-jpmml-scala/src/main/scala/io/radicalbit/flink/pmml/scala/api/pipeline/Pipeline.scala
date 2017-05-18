@@ -41,8 +41,8 @@ private[api] trait Pipeline { self: PmmlModel =>
     extractFields(evaluator.getOutputFields, evaluationResult, evaluator)
 
   private[api] def extractFields(fields: java.util.List[_ <: ModelField],
-                              evaluationResult: java.util.Map[FieldName, _],
-                              evaluator: Evaluator): mutable.Buffer[(String, AnyRef)] =
+                                 evaluationResult: java.util.Map[FieldName, _],
+                                 evaluator: Evaluator): mutable.Buffer[(String, AnyRef)] =
     for {
       field <- fields
       fieldName <- Option(field.getName)

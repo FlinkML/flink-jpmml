@@ -1,6 +1,5 @@
 package io.radicalbit.flink.pmml.scala.models
 
-
 import io.radicalbit.flink.pmml.scala.{InputPreparationException, InputValidationException, JPMMLExtractionException}
 import org.jpmml.evaluator.EvaluationException
 import org.scalatest.{Matchers, WordSpec}
