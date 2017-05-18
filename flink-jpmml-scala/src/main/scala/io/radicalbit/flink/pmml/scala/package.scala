@@ -43,6 +43,7 @@ package object scala {
 
   private[scala] class JPMMLExtractionException(msg: String) extends Exception(msg)
 
-  private[scala] class ModelLoadingException(msg: String, throwable: Throwable) extends RuntimeException(msg, throwable)
+  private[scala] class ModelLoadingException(msg: String, throwable: Throwable)
+      extends RuntimeException(msg, throwable)
 
 }

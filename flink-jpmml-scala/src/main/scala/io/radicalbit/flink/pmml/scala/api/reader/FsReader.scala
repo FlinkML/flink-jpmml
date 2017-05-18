@@ -6,12 +6,12 @@ import org.apache.flink.core.fs.Path
 
 import scala.util.control.Exception.allCatch
 
-trait FsReader { self: ModelReader =>
+private[reader] trait FsReader { self: ModelReader =>
 
-  def closable[T <: Closeable, R](t: T)(f: T => R): R =
+  private def closable[T <: Closeable, R](t: T)(f: T => R): R =
     allCatch.andFinally(t.close()).apply(f(t))
 
-  def buildDistributedPath: String = {
+  private[api] def buildDistributedPath: String = {
     val pathFs = new Path(self.sourcePath)
     val fs = pathFs.getFileSystem
 

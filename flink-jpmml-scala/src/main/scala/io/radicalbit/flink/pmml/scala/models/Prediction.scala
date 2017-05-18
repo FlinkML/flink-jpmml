@@ -1,11 +1,7 @@
 package io.radicalbit.flink.pmml.scala.models
 
 import com.typesafe.scalalogging.LazyLogging
-import io.radicalbit.flink.pmml.scala.{
-  InputPreparationException,
-  InputValidationException,
-  JPMMLExtractionException
-}
+import io.radicalbit.flink.pmml.scala.{InputPreparationException, InputValidationException, JPMMLExtractionException}
 import org.jpmml.evaluator.EvaluationException
 
 import scala.util.{Failure, Success, Try}
