@@ -1,7 +1,8 @@
 package io.radicalbit.flink.pmml.scala.api.functions
 
 import com.typesafe.scalalogging.LazyLogging
-import io.radicalbit.flink.pmml.scala.api.{ModelLoadingException, PmmlModel}
+import io.radicalbit.flink.pmml.scala.ModelLoadingException
+import io.radicalbit.flink.pmml.scala.api.PmmlModel
 import io.radicalbit.flink.pmml.scala.api.reader.ModelReader
 import org.apache.flink.api.common.functions.RichFlatMapFunction
 import org.apache.flink.configuration.Configuration

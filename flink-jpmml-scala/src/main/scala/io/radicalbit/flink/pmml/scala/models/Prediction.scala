@@ -1,7 +1,7 @@
 package io.radicalbit.flink.pmml.scala.models
 
 import com.typesafe.scalalogging.LazyLogging
-import io.radicalbit.flink.pmml.scala.api.{
+import io.radicalbit.flink.pmml.scala.{
   InputPreparationException,
   InputValidationException,
   JPMMLExtractionException
