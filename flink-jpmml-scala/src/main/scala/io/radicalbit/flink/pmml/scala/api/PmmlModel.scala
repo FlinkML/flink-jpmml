@@ -19,11 +19,11 @@ object PmmlModel {
 
   private val evaluatorInstance: ModelEvaluatorFactory = ModelEvaluatorFactory.newInstance()
 
-  def fromReader(reader: ModelReader): PmmlModel = {
+  private[api] def fromReader(reader: ModelReader): PmmlModel = {
     val readerFromFs = reader.buildDistributedPath
     val result = fromFilteredSource(readerFromFs)
 
-    PmmlModel(evaluatorInstance.newModelEvaluator(JAXBUtil.unmarshalPMML(result)))
+    new PmmlModel(evaluatorInstance.newModelEvaluator(JAXBUtil.unmarshalPMML(result)))
   }
 
   private def fromFilteredSource(PMMLPath: String) = {
@@ -31,16 +31,35 @@ object PmmlModel {
   }
 
 }
-case class PmmlModel(evaluator: Evaluator) extends Pipeline {
+class PmmlModel(private[api] val evaluator: Evaluator) extends Pipeline {
 
   import io.radicalbit.flink.pmml.scala.api.converter.VectorConverter._
+
+  /**
+    *
+    * @param inputVector
+    * @param replaceNan
+    * @tparam V
+    * @return
+    */
+  final def predict[V <: Vector](inputVector: V, replaceNan: Option[Double] = None): Prediction = {
+    val result = Try {
+      val validatedInput = validateInput(inputVector)
+      val preparedInput = prepareInput(validatedInput, replaceNan)
+      val evaluationResult = evaluateInput(preparedInput)
+      val extractResult = extractTarget(evaluationResult)
+      extractResult
+    }
+
+    Prediction.extractPrediction(result)
+  }
 
   /**
     * Contains the logic to validate an input Map and wrap it in the dedicated PMML classes.
     * @param input The stream input vector
     * @return
     */
-  final def prepareInput(input: PmmlInput, replaceNaN: Option[Double]): Map[FieldName, FieldValue] = {
+  private[api] def prepareInput(input: PmmlInput, replaceNaN: Option[Double]): Map[FieldName, FieldValue] = {
 
     val activeFields = evaluator.getActiveFields
 
@@ -50,10 +69,9 @@ case class PmmlModel(evaluator: Evaluator) extends Pipeline {
         prepareAndEmit(Try { EvaluatorUtil.prepare(field, rawValue) }, field.getName)
       })
       .toMap
-
   }
 
-  final def validateInput(v: Vector)(implicit vec2Pmml: (Vector, Evaluator) => PmmlInput): PmmlInput = {
+  private[api] def validateInput(v: Vector)(implicit vec2Pmml: (Vector, Evaluator) => PmmlInput): PmmlInput = {
     val modelSize = evaluator.getActiveFields.size
 
     if (v.size != modelSize)
@@ -68,22 +86,10 @@ case class PmmlModel(evaluator: Evaluator) extends Pipeline {
     * @param preparedInput
     * @return
     */
-  final private def evaluateInput(preparedInput: Map[FieldName, FieldValue]): util.Map[FieldName, _] =
+  private[api] def evaluateInput(preparedInput: Map[FieldName, FieldValue]): util.Map[FieldName, _] =
     evaluator.evaluate(preparedInput)
 
-  def predict[V <: Vector](inputVector: V, replaceNan: Option[Double] = None): Prediction = {
-    val result = Try {
-      val validatedInput = validateInput(inputVector)
-      val preparedInput = prepareInput(validatedInput, replaceNan)
-      val evaluationResult = evaluateInput(preparedInput)
-      val extractResult = extractTarget(evaluationResult)
-      extractResult
-    }
-
-    Prediction.extractPrediction(result)
-  }
-
-  def extractTarget(evaluationResult: java.util.Map[FieldName, _]): Double = {
+  private[api] def extractTarget(evaluationResult: java.util.Map[FieldName, _]): Double = {
     val targets = extractTargetFields(evaluationResult)
 
     Option(targets.head._2) match {
@@ -91,21 +97,5 @@ case class PmmlModel(evaluator: Evaluator) extends Pipeline {
       case None => throw new JPMMLExtractionException("Target value is null.")
     }
   }
-
-  /**
-    * Used to extract all the target fields specified by the PMML document.
-    * @param evaluationResult
-    * @return
-    */
-  def extractTargetFields(evaluationResult: java.util.Map[FieldName, _]): Seq[(String, Any)] =
-    extractFields(evaluator.getTargetFields, evaluationResult, evaluator)
-
-  /**
-    * Used to extract all the output fields specified by the PMML document.
-    * @param evaluationResult
-    * @return
-    */
-  def extractOutputFields(evaluationResult: java.util.Map[FieldName, _]): Seq[(String, Any)] =
-    extractFields(evaluator.getOutputFields, evaluationResult, evaluator)
 
 }
