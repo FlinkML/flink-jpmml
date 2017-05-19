@@ -2,6 +2,9 @@
 /flink-jpmml-handson.iml
 ### Java template
 
+# OSx files
+*.DS_Store
+
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
