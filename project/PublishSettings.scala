@@ -13,7 +13,7 @@ object PublishSettings {
       else
         Some("Radicalbit Releases" at "https://tools.radicalbit.io/maven/repository/internal/")
     }.value,
-    credentials += Credentials(Path.userHome / ".artifactory" / ".archiva-snapshots"),
-    credentials += Credentials(Path.userHome / ".artifactory" / ".archiva-releases")
+    credentials += Credentials(Path.userHome / ".artifactory" / ".archive-snapshots"),
+    credentials += Credentials(Path.userHome / ".artifactory" / ".archive-releases")
   )
 }

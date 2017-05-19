@@ -34,6 +34,7 @@ project/plugins/project/
 project/project/
 project/target/
 
+mainRunner
 # Scala-IDE specific
 .scala_dependencies
 .worksheet
