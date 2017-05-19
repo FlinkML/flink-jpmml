@@ -11,6 +11,7 @@ object Dependencies {
       flink.clients % Provided,
       flink.ml,
       jpmml.evaluator,
+      logging.`scala-logging`,
       // Test utils
       asm.assembly % Test,
       flink.utils % Test,
@@ -66,10 +67,8 @@ object Dependencies {
 
   object logging {
     lazy val namespace = "com.typesafe.scala-logging"
-    lazy val version210 = "2.1.2"
-    lazy val version211 = "3.5.0"
-    lazy val lazyLogging210 = namespace %% "scala-logging" % version210
-    lazy val lazyLogging211 = namespace %% "scala-logging" % version211
+    lazy val version = "2.1.2"
+    lazy val `scala-logging` = namespace %% "scala-logging-slf4j" % version
   }
 
   /*** Test utils ***/
