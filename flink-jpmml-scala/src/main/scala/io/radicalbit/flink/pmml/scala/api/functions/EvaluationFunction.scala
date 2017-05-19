@@ -9,7 +9,9 @@ import org.apache.flink.configuration.Configuration
 
 import scala.util.{Failure, Success, Try}
 
-private[scala] abstract class EvaluationFunction[IN, OUT](reader: ModelReader) extends RichFlatMapFunction[IN, OUT] with LazyLogging {
+private[scala] abstract class EvaluationFunction[IN, OUT](reader: ModelReader)
+    extends RichFlatMapFunction[IN, OUT]
+    with LazyLogging {
 
   protected lazy val evaluator: PmmlModel = PmmlModel.fromReader(reader)
 
