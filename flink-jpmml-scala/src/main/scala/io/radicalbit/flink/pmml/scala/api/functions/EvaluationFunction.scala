@@ -1,6 +1,7 @@
 package io.radicalbit.flink.pmml.scala.api.functions
 
-import io.radicalbit.flink.pmml.scala.api.{ModelLoadingException, PmmlModel}
+import io.radicalbit.flink.pmml.scala.ModelLoadingException
+import io.radicalbit.flink.pmml.scala.api.PmmlModel
 import io.radicalbit.flink.pmml.scala.api.reader.ModelReader
 import io.radicalbit.flink.pmml.scala.logging.LazyLogging
 import org.apache.flink.api.common.functions.RichFlatMapFunction
@@ -8,7 +9,9 @@ import org.apache.flink.configuration.Configuration
 
 import scala.util.{Failure, Success, Try}
 
-abstract class EvaluationFunction[IN, OUT](reader: ModelReader) extends RichFlatMapFunction[IN, OUT] with LazyLogging {
+private[scala] abstract class EvaluationFunction[IN, OUT](reader: ModelReader)
+    extends RichFlatMapFunction[IN, OUT]
+    with LazyLogging {
 
   protected lazy val evaluator: PmmlModel = PmmlModel.fromReader(reader)
 

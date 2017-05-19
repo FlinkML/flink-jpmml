@@ -1,9 +1,9 @@
 package io.radicalbit.flink.pmml.scala.api
 
+import io.radicalbit.flink.pmml.scala.{InputPreparationException, InputValidationException, JPMMLExtractionException}
 import io.radicalbit.flink.pmml.scala.api.reader.ModelReader
 import io.radicalbit.flink.pmml.scala.models.{Prediction, Score, Target}
 import io.radicalbit.flink.pmml.scala.utils.{PmmlEvaluatorKit, PmmlLoaderKit}
-import org.apache.flink.api.scala.ClosureCleaner
 import org.apache.flink.ml.math.{DenseVector, SparseVector}
 import org.dmg.pmml.MiningField.UsageType
 import org.dmg.pmml.{DataField, DataType, FieldName, InvalidValueTreatmentMethod, MiningField, OpType, OutputField}
@@ -21,9 +21,9 @@ class PmmlModelSpec extends WordSpec with Matchers with PmmlLoaderKit with PmmlE
   private val evaluatorNoOutput = buildEvaluator(getPMMLResource(Source.KmeansPmmlNoOut))
   private val evaluatorStrings = buildEvaluator(getPMMLResource(Source.KmeansPmmlStringFields))
 
-  private val model = PmmlModel(evaluator)
-  private val modelStrings = PmmlModel(evaluatorStrings)
-  private val modelNoOutput = PmmlModel(evaluatorNoOutput)
+  private val model = new PmmlModel(evaluator)
+  private val modelStrings = new PmmlModel(evaluatorStrings)
+  private val modelNoOutput = new PmmlModel(evaluatorNoOutput)
 
   "PmmlModel" should {
 

@@ -1,10 +1,6 @@
 package io.radicalbit.flink.pmml.scala.models
 
-import io.radicalbit.flink.pmml.scala.api.{
-  InputPreparationException,
-  InputValidationException,
-  JPMMLExtractionException
-}
+import io.radicalbit.flink.pmml.scala.{InputPreparationException, InputValidationException, JPMMLExtractionException}
 import io.radicalbit.flink.pmml.scala.logging.LazyLogging
 import org.jpmml.evaluator.EvaluationException
 
@@ -13,12 +9,12 @@ import scala.util.control.NonFatal
 
 object Prediction extends LazyLogging {
 
-  def extractPrediction(out: Try[Double]): Prediction = out match {
+  private[scala] def extractPrediction(out: Try[Double]): Prediction = out match {
     case Success(result) => Prediction(Score(result))
     case Failure(throwable) => onFailedPrediction(throwable)
   }
 
-  def onFailedPrediction(throwable: Throwable): Prediction = {
+  private[scala] def onFailedPrediction(throwable: Throwable): Prediction = {
     throwable match {
       case e: JPMMLExtractionException => logger.warn("Error while extracting results. The cause is: {}", e.getMessage)
       case e: InputPreparationException => logger.warn("Error while preparing input. The cause is: {}", e.getMessage)
