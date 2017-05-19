@@ -24,7 +24,7 @@ import org.apache.flink.core.fs.Path
 
 import scala.util.control.Exception.allCatch
 
-private[reader] trait FsReader { self: ModelReader =>
+private[api] trait FsReader { self: ModelReader =>
 
   private def closable[T <: Closeable, R](t: T)(f: T => R): R =
     allCatch.andFinally(t.close()).apply(f(t))

@@ -34,10 +34,20 @@ import org.xml.sax.InputSource
 import scala.collection.JavaConversions._
 import scala.util.Try
 
+/** Contains [[PmmlModel.fromReader]] factory method; as singleton, it guarantees one and only copy of the
+  * model when the latter is requested.
+  *
+  */
 object PmmlModel {
 
   private val evaluatorInstance: ModelEvaluatorFactory = ModelEvaluatorFactory.newInstance()
 
+  /** Loads the distributed path by [[io.radicalbit.flink.pmml.scala.api.reader.FsReader.buildDistributedPath]]
+    * and construct a [[PmmlModel]] instance starting from `evalauatorInstance`
+    *
+    * @param reader
+    * @return
+    */
   private[api] def fromReader(reader: ModelReader): PmmlModel = {
     val readerFromFs = reader.buildDistributedPath
     val result = fromFilteredSource(readerFromFs)
@@ -50,16 +60,40 @@ object PmmlModel {
   }
 
 }
+
+/** Provides to the user the model instance and its methods; it is provided to the user as input of evaluate UDF
+  *
+  * {{{
+  *   val toEvaluateStream: DataStream[Input]
+  *   val reader: ModelReader
+  *   toEvaluateStream.evaluate(reader) { (input, model) =>
+  *     val pmmlModel: PmmlModel = model
+  *     val prediction = model.evaluate(vectorized(input))
+  *   }
+  * }}}
+  *
+  * and it contains prediction method. It implements the core logic of the project.
+  *
+  * @param evaluator
+  */
 class PmmlModel(private[api] val evaluator: Evaluator) extends Pipeline {
 
   import io.radicalbit.flink.pmml.scala.api.converter.VectorConverter._
 
-  /**
+  /** Implements the entire prediction pipeline, which can be described as 4 main steps:
     *
-    * @param inputVector
-    * @param replaceNan
-    * @tparam V
-    * @return
+    * - validates the input to be conform to PMML model size [[PmmlModel.validateInput]]
+    * - prepares the input in full compliance to [[EvaluatorUtil.prepare]] JPMML method [[PmmlModel.prepareInput]]
+    * - evaluates the input against inner PMML model instance and returns a [[util.Map]]
+    * output [[PmmlModel.evaluateInput]]
+    * - extracts the target from evaluation result.
+    *
+    * As final action the [[Try]] statement is executed by [[Prediction.extractPrediction]] method.
+    *
+    * @param inputVector the input event as a [[Vector]] instance
+    * @param replaceNan An [[Option]] describing a replace value for not defined vector values
+    * @tparam V subclass of [[Vector]]
+    * @return [[Prediction]]
     */
   final def predict[V <: Vector](inputVector: V, replaceNan: Option[Double] = None): Prediction = {
     val result = Try {
