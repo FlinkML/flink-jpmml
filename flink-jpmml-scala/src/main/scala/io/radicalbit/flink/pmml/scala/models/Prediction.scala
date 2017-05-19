@@ -25,13 +25,24 @@ import org.jpmml.evaluator.EvaluationException
 import scala.util.{Failure, Success, Try}
 import scala.util.control.NonFatal
 
+/** Factory for [[Prediction]] case class instances */
 object Prediction extends LazyLogging {
 
+  /** Evaluates [[Try]] statement executed at [[io.radicalbit.flink.pmml.scala.api.PmmlModel.predict]]
+    *
+    * @param out containing evaluation pipeline execution
+    * @return
+    */
   private[scala] def extractPrediction(out: Try[Double]): Prediction = out match {
     case Success(result) => Prediction(Score(result))
     case Failure(throwable) => onFailedPrediction(throwable)
   }
 
+  /** Pattern matches failures arisen by [[io.radicalbit.flink.pmml.scala.api.PmmlModel.predict]]
+    *
+    * @param throwable
+    * @return
+    */
   private[scala] def onFailedPrediction(throwable: Throwable): Prediction = {
     throwable match {
       case e: JPMMLExtractionException => logger.warn("Error while extracting results. The cause is: {}", e.getMessage)
@@ -46,4 +57,8 @@ object Prediction extends LazyLogging {
   private def emptyTarget = Prediction(EmptyScore)
 }
 
+/** Models the result output container
+  *
+  * @param value contains the extracted prediction of [[Target]] type
+  */
 case class Prediction(value: Target)
