@@ -99,9 +99,8 @@ class PmmlModel(private[api] val evaluator: Evaluator) extends Pipeline {
       vec2Pmml(v, evaluator)
   }
 
-  /**
+  /** Used to evaluate an input against a PMML model. It returns the raw output of the JPMML evaluator
     *
-    * Used to evaluate an input against a PMML model. It returns the raw output of the JPMML evaluator.
     * @param preparedInput
     * @return
     */
