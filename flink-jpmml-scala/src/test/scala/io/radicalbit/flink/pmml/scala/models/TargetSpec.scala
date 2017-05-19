@@ -1,3 +1,21 @@
+/*
+ * flink-jpmml
+ * Copyright (C) 2017 Radicalbit
+
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package io.radicalbit.flink.pmml.scala.models
 
 import org.scalatest.{Matchers, WordSpec}
@@ -8,27 +26,27 @@ class TargetSpec extends WordSpec with Matchers {
 
   "Target" should {
 
-    "With success value Score" in {
+    "have right box called Score and with right value" in {
       target shouldBe Score(3.0)
     }
 
-    "Empty method return EmptyScore" in {
+    "have right empty box called EmptyScore and with right value " in {
       emptyTarget shouldBe EmptyScore
     }
 
-    "get method on Score" in {
+    "have a get method" in {
       target.get shouldBe 3.0
     }
 
-    "get method on EmptyScore" in {
+    "throw a NoSuchElementException if get on emptyTarget" in {
       an[NoSuchElementException] should be thrownBy emptyTarget.get
     }
 
-    "getOrElse on Score" in {
+    "have a getOrElse method and return vale if is score" in {
       target.getOrElse(-1.0) shouldBe 3.0
     }
 
-    "getOrElse on EmptyScore" in {
+    "have a getOrElse method and return empty value if is empty score" in {
       emptyTarget.getOrElse(-1.0) shouldBe -1.0
     }
 
