@@ -29,6 +29,9 @@ For [maven](https://maven.apache.org/) users instead
   </dependency>
 </dependencies>
 ```
+
+Keep in mind you will need also Flink `scala-core` `flink-streaming` and `flink-clients` libraries.
+
 Lets start.
 
 ### Getting Started ###

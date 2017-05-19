@@ -18,15 +18,35 @@
 
 package io.radicalbit.flink.pmml.scala.models
 
+/** Represents the result output value; if the target is present has [[Score]] value,
+  * [[EmptyScore]] otherwise.
+  */
 object Target {
 
+  /** Factory method
+    *
+    * @param v
+    * @return
+    */
   def apply(v: Double): Target = Score(v)
 
+  /** Returns an empty instance of [[Target]]
+    *
+    * @return
+    */
   def empty = EmptyScore
 }
 
+/** ADT sealed trait providing getters for values.
+  *
+  */
 sealed trait Target {
 
+  /** Returns [[Score]]] if target has value, default value otherwise
+    *
+    * @param default the user defined default value
+    * @return
+    */
   final def getOrElse(default: => Double): Double =
     this match {
       case Score(v) => v
@@ -36,12 +56,27 @@ sealed trait Target {
   def get: Double
 }
 
+/** Represents the Target value if it is present
+  *
+  * @param value the prediction value as [[Double]]
+  */
 final case class Score(value: Double) extends Target {
 
+  /** Returns the [[Score]] value
+    *
+    * @return
+    */
   def get: Double = value
 }
 
+/** Represents the Target value if it is not present
+  *
+  */
 case object EmptyScore extends Target {
 
+  /** Returns a [[NoSuchElementException]]
+    *
+    * @return
+    */
   def get: Double = throw new NoSuchElementException("EmptyScore.nan")
 }
