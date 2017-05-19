@@ -29,8 +29,25 @@ import org.apache.flink.util.Collector
 
 import _root_.scala.reflect.ClassTag
 
+/** Provides implicit classes enriching Flink [[DataStream]] in order to compute evaluations
+  * against streams.
+  *
+  */
 package object scala {
 
+  /** Enriches Flink [[DataStream]] with [[evaluate]] method
+    *
+    * {{{
+    *   case class Input(values: Seq[Double])
+    *   val inputStream = env.fromCollection(Seq(Input(Seq(1.0)), Input(Seq(3.0)))
+    *   inputStream.evaluate(reader) { (event, model) =>
+    *
+    *   }
+    * }}}
+    *
+    * @param stream The input stream
+    * @tparam T The input stream inner type
+    */
   implicit class RichDataStream[T: TypeInformation: ClassTag](stream: DataStream[T]) {
 
     def evaluate[R: TypeInformation](modelReader: ModelReader)(f: (T, PmmlModel) => R): DataStream[R] = {
@@ -43,6 +60,11 @@ package object scala {
 
   }
 
+  /** Enriches Flink [[DataStream]] with [[evaluate]] on FlinkML [[Vector]] input stream
+    *
+    * @param stream The input stream
+    * @tparam V The input stream inner type; it is subclass of [[Vector]]
+    */
   implicit class QuickDataStream[V <: Vector: TypeInformation: ClassTag](stream: DataStream[V]) {
 
     def evaluate(modelReader: ModelReader): DataStream[(Prediction, V)] =
@@ -55,12 +77,29 @@ package object scala {
 
   }
 
+  /** Models conformity failure between PMML model and input [[DataStream]]
+    *
+    * @param msg
+    */
   private[scala] class InputValidationException(msg: String) extends Exception(msg)
 
+  /** Models [[org.jpmml.evaluator.EvaluatorUtil.prepare()]] method failure
+    *
+    * @param msg
+    */
   private[scala] class InputPreparationException(msg: String) extends Exception(msg)
 
+  /** Models empty result from [[org.jpmml.evaluator.ModelEvaluator]] evaluation
+    *
+    * @param msg
+    */
   private[scala] class JPMMLExtractionException(msg: String) extends Exception(msg)
 
+  /** Models failure on loading PMML model from distributed system
+    *
+    * @param msg
+    * @param throwable
+    */
   private[scala] class ModelLoadingException(msg: String, throwable: Throwable)
       extends RuntimeException(msg, throwable)
 
