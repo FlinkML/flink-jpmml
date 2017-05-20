@@ -45,6 +45,7 @@ private[api] object VectorConverter {
         if (sparseVector.indices.contains(index)) Some(sparseVector(index)) else None
       }
     }
+
   }
 
   private[api] implicit def portingToFlinkJpmml[T: VectorConverter, E <: Evaluator](dataVector: T, eval: E) =
