@@ -12,7 +12,7 @@ object Clustering {
 
     env.setParallelism(4)
 
-    //Read model from custom iris source
+    //Read data from custom iris source
     val irisDataStream = irisSource(env)
 
     //Load model
