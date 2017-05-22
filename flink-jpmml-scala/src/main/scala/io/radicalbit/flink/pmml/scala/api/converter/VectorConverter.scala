@@ -70,8 +70,8 @@ private[api] object VectorConverter {
     }
   }
 
-
   private[api] implicit object SparseVector2Map extends VectorConverter[SparseVector] {
+
     /** Converts a [[SparseVector]] to the internal type by mapping PMML model fields to vector values.
       * Note that only existing values will be mapped
       *
