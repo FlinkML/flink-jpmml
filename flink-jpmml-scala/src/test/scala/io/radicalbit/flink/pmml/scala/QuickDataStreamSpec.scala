@@ -28,6 +28,9 @@ import org.apache.flink.streaming.api.scala._
 
 object QuickDataStreamSpec extends FlinkTestKitCompanion[(Prediction, Vector)]
 
+/** Tests [[QuickDataStream]] implicit class
+  *
+  */
 class QuickDataStreamSpec extends FlinkPipelineTestKit[Vector, (Prediction, Vector)] with PmmlLoaderKit {
 
   private val defaultInput: Vector = DenseVector(1.0, 1.0, 1.0, 1.0)
