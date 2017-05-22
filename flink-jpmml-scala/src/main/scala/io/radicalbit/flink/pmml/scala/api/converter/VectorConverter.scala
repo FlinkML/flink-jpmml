@@ -23,8 +23,11 @@ import org.apache.flink.ml.math.{DenseVector, SparseVector, Vector}
 
 import scala.collection.JavaConversions._
 
-/**
-  * Create A TypeClass Pattern to convert input data from flink, in Map to pass a JPMML
+/** Type Class Pattern implementing converters from Flink [[Vector]] instances to
+  * internal types; the existing fields (i.e. value defined fields) are modeled as [[Map]]s; the
+  * not existing fields (i.e. NaN values) will not be mapped within the Internal type
+  *
+  *
   */
 sealed trait VectorConverter[T] extends Serializable {
   def serializeVector(v: T, eval: Evaluator): Map[String, Any]
@@ -32,16 +35,25 @@ sealed trait VectorConverter[T] extends Serializable {
 
 private[api] object VectorConverter {
 
-  private[api] implicit object VectorToMapbleJpmml extends VectorConverter[Vector] {
+  /** Type class pattern entry-point: it deliveries right converter depending
+    * on the input type (i.e. Dense or Sparse)
+    *
+    */
+  private[api] implicit object VectorConversion extends VectorConverter[Vector] {
+
     def serializeVector(v: Vector, eval: Evaluator): PmmlInput = {
       v match {
-        case denseVector: DenseVector => DenseVectorMapbleJpmml.serializeVector(denseVector, eval)
-        case sparseVector: SparseVector => SparseVectorMapbleJpmml.serializeVector(sparseVector, eval)
+        case denseVector: DenseVector => DenseVector2Map.serializeVector(denseVector, eval)
+        case sparseVector: SparseVector => SparseVector2Map.serializeVector(sparseVector, eval)
       }
     }
   }
 
-  private[api] implicit object DenseVectorMapbleJpmml extends VectorConverter[DenseVector] {
+  /** Converts a [[DenseVector]] to the internal type by mapping PMML model fields to vector values.
+    *
+    */
+  private[api] implicit object DenseVector2Map extends VectorConverter[DenseVector] {
+
     def serializeVector(v: DenseVector, eval: Evaluator): PmmlInput = {
       val getNameInput = getKeyFromModel(eval)
 
@@ -49,7 +61,12 @@ private[api] object VectorConverter {
     }
   }
 
-  private[api] implicit object SparseVectorMapbleJpmml extends VectorConverter[SparseVector] {
+  /** Converts a [[SparseVector]] to the internal type by mapping PMML model fields to vector values.
+    * Note that only existing values will be mapped
+    *
+    */
+  private[api] implicit object SparseVector2Map extends VectorConverter[SparseVector] {
+
     def serializeVector(v: SparseVector, eval: Evaluator): PmmlInput = {
       val getNameInput = getKeyFromModel(eval)
 
@@ -64,14 +81,13 @@ private[api] object VectorConverter {
 
   }
 
-  private[api] implicit def portingToFlinkJpmml[T: VectorConverter, E <: Evaluator](dataVector: T, eval: E) =
+  private[api] implicit def applyConversion[T: VectorConverter, E <: Evaluator](dataVector: T, eval: E) =
     implicitly[VectorConverter[T]].serializeVector(dataVector, eval)
 
-  /**
-    * Used to extract all key from input
+  /** Extracts the key values of the model fields from [[Evaluator]] instance.
     *
-    * @param evaluator
-    * @return Seq[String]
+    * @param evaluator PMML evaluator instance
+    * @return the keys as a Scala [[Seq]]
     *
     */
   private def getKeyFromModel(evaluator: Evaluator) =

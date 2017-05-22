@@ -21,6 +21,10 @@ package io.radicalbit.flink.pmml.scala
 import org.dmg.pmml.Model
 import org.jpmml.evaluator.ModelEvaluator
 
+/** Contains inner types definition
+  * [[io.radicalbit.flink.pmml.scala.api.Evaluator]] represents JPMML Model instance
+  * [[io.radicalbit.flink.pmml.scala.api.PmmlInput]] represents internal input type
+  */
 package object api {
 
   type Evaluator = ModelEvaluator[_ <: Model]

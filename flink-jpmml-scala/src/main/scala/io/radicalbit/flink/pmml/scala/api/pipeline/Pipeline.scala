@@ -29,10 +29,22 @@ import scala.collection.JavaConversions._
 import scala.collection.mutable
 import scala.util.{Failure, Success, Try}
 
+/** Self type trait extending [[PmmlModel]] instance methods; they offer
+  * additional features for the preparation and extraction pipeline steps.
+  *
+  */
 private[api] trait Pipeline { self: PmmlModel =>
 
   def predict[V <: Vector](inputVector: V, replaceNan: Option[Double] = None): Prediction
 
+  /** Emits prepared input if JPMML preparation went fine.
+    *
+    * @throws InputPreparationException if the JPMML preparation fails.
+    *
+    * @param outcome `Try` evaluation of [[EvaluatorUtil.prepare]] method output value
+    * @param field The field name related to the value
+    * @return Prepared Input
+    */
   private[api] def prepareAndEmit(outcome: Try[FieldValue], field: FieldName): (FieldName, FieldValue) =
     outcome match {
       case Success(value) => (field, value)
@@ -40,22 +52,29 @@ private[api] trait Pipeline { self: PmmlModel =>
         throw new InputPreparationException("The " + field.getValue + " field JPMML finalization failed.")
     }
 
-  /**
-    * Used to extract all the target fields specified by the PMML document.
-    * @param evaluationResult
-    * @return
+  /** Extracts all the target fields specified by the PMML document.
+    *
+    * @param evaluationResult evaluation step outcome
+    * @return extracted output
     */
   private[api] def extractTargetFields(evaluationResult: java.util.Map[FieldName, _]): Seq[(String, Any)] =
     extractFields(evaluator.getTargetFields, evaluationResult, evaluator)
 
-  /**
-    * Used to extract all the output fields specified by the PMML document.
-    * @param evaluationResult
-    * @return
+  /** Extracts all the output fields specified by the PMML document.
+    *
+    * @param evaluationResult evaluation step outcome
+    * @return extracted output
     */
   private[api] def extractOutputFields(evaluationResult: java.util.Map[FieldName, _]): Seq[(String, Any)] =
     extractFields(evaluator.getOutputFields, evaluationResult, evaluator)
 
+  /** Calls [[EvaluatorUtil.decode]] for each field demanded for extraction.
+    *
+    * @param fields demanded for extraction
+    * @param evaluationResult evaluation outcome container
+    * @param evaluator The PMML instance as a [[org.jpmml.evaluator.ModelEvaluator]]
+    * @return
+    */
   private[api] def extractFields(fields: java.util.List[_ <: ModelField],
                                  evaluationResult: java.util.Map[FieldName, _],
                                  evaluator: Evaluator): mutable.Buffer[(String, AnyRef)] =
@@ -64,6 +83,12 @@ private[api] trait Pipeline { self: PmmlModel =>
       fieldName <- Option(field.getName)
     } yield { fieldName.getValue -> EvaluatorUtil.decode(evaluationResult.get(fieldName)) }
 
+  /** Casts a String to Double if the outcome is a String, returns the Double otherwise.
+    *
+    * @param target The extracted target
+    * @throws java.lang.ClassCastException if the outcome could not be casted to Double
+    * @return The outcome as a Double
+    */
   @throws(classOf[ClassCastException])
   protected def extractTargetValue(target: Any): Double = target match {
     case s: String => s.toDouble
