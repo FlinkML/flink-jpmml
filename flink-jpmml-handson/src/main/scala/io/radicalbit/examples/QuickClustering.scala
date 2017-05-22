@@ -1,6 +1,5 @@
 package io.radicalbit.examples
 
-import org.apache.flink.streaming.api.scala.StreamExecutionEnvironment
 import org.apache.flink.streaming.api.scala._
 import io.radicalbit.examples.model.IrisSource._
 import io.radicalbit.flink.pmml.scala._
