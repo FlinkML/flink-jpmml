@@ -31,9 +31,9 @@ import scala.util.{Failure, Success, Try}
   * the `evaluator` lazy evaluated object as instance of [[PmmlModel]]
   * the open method as a builder of the evaluator instance at operator initialization time
   *
-  * @param reader
-  * @tparam IN
-  * @tparam OUT
+  * @param reader The model reader instance coupled with the model source path
+  * @tparam IN The input Type
+  * @tparam OUT The output Type
   */
 private[scala] abstract class EvaluationFunction[IN, OUT](reader: ModelReader)
     extends RichFlatMapFunction[IN, OUT]
@@ -41,11 +41,6 @@ private[scala] abstract class EvaluationFunction[IN, OUT](reader: ModelReader)
 
   protected lazy val evaluator: PmmlModel = PmmlModel.fromReader(reader)
 
-  /** initializes the evaluator object
-    *
-    * @param parameters [[Configuration]]
-    * @throws ModelLoadingException if the model could not be initialized at operator construction time
-    */
   override def open(parameters: Configuration): Unit = {
     Try(evaluator.evaluator.getModel) match {
       case Success(model) => logger.info(s"Model has been read successfully, model name: ${model.getModelName}")

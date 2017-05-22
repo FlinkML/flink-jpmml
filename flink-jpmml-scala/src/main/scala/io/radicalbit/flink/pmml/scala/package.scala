@@ -29,27 +29,39 @@ import org.apache.flink.util.Collector
 
 import _root_.scala.reflect.ClassTag
 
-/** Provides implicit classes enriching Flink [[org.apache.flink.streaming.api.scala.DataStream]] in order to compute evaluations
-  * against streams.
+/** Main library package, it contains the core of the library.
+  *
+  * The `scala` package object provides implicit classes enriching Flink
+  * [[org.apache.flink.streaming.api.scala.DataStream]] in order to compute evaluations against streams.
   *
   */
 package object scala {
 
-  /** Enriches Flink [[org.apache.flink.streaming.api.scala.DataStream]] with [[evaluate]] method
+  /** Enriches Flink [[org.apache.flink.streaming.api.scala.DataStream]] with [[evaluate]] method, as
     *
     * {{{
     *   case class Input(values: Seq[Double])
     *   val inputStream = env.fromCollection(Seq(Input(Seq(1.0)), Input(Seq(3.0)))
     *   inputStream.evaluate(reader) { (event, model) =>
-    *
+    *     val prediction = model.predict(event.toVector)
+    *     prediction.value
     *   }
     * }}}
     *
     * @param stream The input stream
-    * @tparam T The input stream inner type
+    * @tparam T The input stream inner Type
     */
   implicit class RichDataStream[T: TypeInformation: ClassTag](stream: DataStream[T]) {
 
+    /** It evaluates the `DataStream` against the model pointed out by
+      * [[io.radicalbit.flink.pmml.scala.api.reader.ModelReader]]; it takes as input an UDF `(T, PmmlModel) => R)` .
+      * It's modeled on top of `EvaluationFunction`.
+      *
+      * @param modelReader the [[io.radicalbit.flink.pmml.scala.api.reader.ModelReader]] instance
+      * @param f UDF function
+      * @tparam R The output type
+      * @return `R`
+      */
     def evaluate[R: TypeInformation](modelReader: ModelReader)(f: (T, PmmlModel) => R): DataStream[R] = {
       val abstractOperator = new EvaluationFunction[T, R](modelReader) {
         override def flatMap(value: T, out: Collector[R]): Unit = out.collect(f(value, evaluator))
@@ -60,13 +72,21 @@ package object scala {
 
   }
 
-  /** Enriches Flink DataStream with [[evaluate]] on FlinkML [[org.apache.flink.ml.math.Vector]] input stream
+  /** Enriches Flink DataStream with [[evaluate]] on
+    * [[https://ci.apache.org/projects/flink/flink-docs-release-1.2/dev/libs/ml/index.html FlinkML]]
+    * [[org.apache.flink.ml.math.Vector]] input stream
     *
     * @param stream The input stream
     * @tparam V The input stream inner type; it is subclass of [[org.apache.flink.ml.math.Vector]]
     */
   implicit class QuickDataStream[V <: Vector: TypeInformation: ClassTag](stream: DataStream[V]) {
 
+    /** Evaluates the `DataStream` against PmmlModel by invoking [[RichDataStream]] `evaluate` method.
+      * It returns directly the prediction along with the input vector.
+      *
+      * @param modelReader The reader instance coupled to model source path.
+      * @return (Prediction, V)
+      */
     def evaluate(modelReader: ModelReader): DataStream[(Prediction, V)] =
       new RichDataStream[V](stream).evaluate(modelReader) { (vec, model) =>
         {
