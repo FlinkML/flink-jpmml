@@ -5,14 +5,15 @@ import io.radicalbit.examples.model.IrisSource._
 import io.radicalbit.flink.pmml.scala._
 import io.radicalbit.flink.pmml.scala.api.reader.ModelReader
 import org.apache.flink.api.java.utils.ParameterTool
+import io.radicalbit.examples.util.EnsureParameters.ensureParams
 
-object QuickClustering {
+object QuickEvaluateKmeans {
   def main(args: Array[String]): Unit = {
     val params: ParameterTool = ParameterTool.fromArgs(args)
     val env = StreamExecutionEnvironment.getExecutionEnvironment
 
     env.getConfig.setGlobalJobParameters(params)
-    val inputModel = if(params.has("model")) params.get("model") else throw new IllegalArgumentException("model are required")
+    val inputModel = ensureParams(params)
 
     //Read data from custom iris source
     val irisDatastream = irisSource(env)
