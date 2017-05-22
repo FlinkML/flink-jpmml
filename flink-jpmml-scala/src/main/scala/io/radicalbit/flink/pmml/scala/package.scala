@@ -29,13 +29,13 @@ import org.apache.flink.util.Collector
 
 import _root_.scala.reflect.ClassTag
 
-/** Provides implicit classes enriching Flink [[DataStream]] in order to compute evaluations
+/** Provides implicit classes enriching Flink [[org.apache.flink.streaming.api.scala.DataStream]] in order to compute evaluations
   * against streams.
   *
   */
 package object scala {
 
-  /** Enriches Flink [[DataStream]] with [[evaluate]] method
+  /** Enriches Flink [[org.apache.flink.streaming.api.scala.DataStream]] with [[evaluate]] method
     *
     * {{{
     *   case class Input(values: Seq[Double])
@@ -60,10 +60,10 @@ package object scala {
 
   }
 
-  /** Enriches Flink [[DataStream]] with [[evaluate]] on FlinkML [[Vector]] input stream
+  /** Enriches Flink DataStream with [[evaluate]] on FlinkML [[org.apache.flink.ml.math.Vector]] input stream
     *
     * @param stream The input stream
-    * @tparam V The input stream inner type; it is subclass of [[Vector]]
+    * @tparam V The input stream inner type; it is subclass of [[org.apache.flink.ml.math.Vector]]
     */
   implicit class QuickDataStream[V <: Vector: TypeInformation: ClassTag](stream: DataStream[V]) {
 
@@ -77,7 +77,7 @@ package object scala {
 
   }
 
-  /** Models conformity failure between PMML model and input [[DataStream]]
+  /** Models conformity failure between PMML model and input [[org.apache.flink.streaming.api.scala.DataStream]]
     *
     * @param msg
     */

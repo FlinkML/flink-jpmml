@@ -58,7 +58,7 @@ sealed trait Target {
 
 /** Represents the Target value if it is present
   *
-  * @param value the prediction value as [[Double]]
+  * @param value the prediction value as [[scala.Double]]
   */
 final case class Score(value: Double) extends Target {
 
@@ -74,9 +74,10 @@ final case class Score(value: Double) extends Target {
   */
 case object EmptyScore extends Target {
 
-  /** Returns a [[NoSuchElementException]]
+  /** Implements get method when the [[Score]] is empty
     *
     * @return
+    * @throws scala.NoSuchElementException for `EmptyScore` instance.
     */
   def get: Double = throw new NoSuchElementException("EmptyScore.nan")
 }

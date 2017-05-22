@@ -5,11 +5,15 @@ resolvers in ThisBuild ++= Seq(
 
 lazy val root = project
   .in(file("."))
+  .enablePlugins(ScalaUnidocPlugin)
   .settings(
     name := "flink-jpmml",
     crossScalaVersions := Seq("2.10.6", "2.11.8"),
     publish := {},
-    publishLocal := {}
+    publishLocal := {},
+    unidocProjectFilter in (ScalaUnidoc, unidoc) := inAnyProject -- inProjects(`flink-jpmml-java`,
+                                                                               `flink-jpmml-handson`,
+                                                                               `flink-jpmml-assets`)
   )
   .aggregate(`flink-jpmml-handson`, `flink-jpmml-scala`, `flink-jpmml-java`, `flink-jpmml-assets`)
 
