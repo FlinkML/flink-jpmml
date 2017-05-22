@@ -41,34 +41,46 @@ private[api] object VectorConverter {
     */
   private[api] implicit object VectorConversion extends VectorConverter[Vector] {
 
-    def serializeVector(v: Vector, eval: Evaluator): PmmlInput = {
+    /** Converts a [[Vector]] to the internal type by mapping PMML model fields to vector values.
+      *
+      * @param v Input vector instance as [[Vector]]
+      * @param evaluator Evaluator instance as [[Evaluator]]
+      * @return The converted instance (could be either `Dense` or `Sparse`
+      */
+    def serializeVector(v: Vector, evaluator: Evaluator): PmmlInput = {
       v match {
-        case denseVector: DenseVector => DenseVector2Map.serializeVector(denseVector, eval)
-        case sparseVector: SparseVector => SparseVector2Map.serializeVector(sparseVector, eval)
+        case denseVector: DenseVector => DenseVector2Map.serializeVector(denseVector, evaluator)
+        case sparseVector: SparseVector => SparseVector2Map.serializeVector(sparseVector, evaluator)
       }
     }
   }
 
-  /** Converts a [[DenseVector]] to the internal type by mapping PMML model fields to vector values.
-    *
-    */
   private[api] implicit object DenseVector2Map extends VectorConverter[DenseVector] {
 
-    def serializeVector(v: DenseVector, eval: Evaluator): PmmlInput = {
-      val getNameInput = getKeyFromModel(eval)
+    /** Converts a [[DenseVector]] to the internal type by mapping PMML model fields to vector values.
+      *
+      * @param v The input Dense Vector
+      * @param evaluator The evaluator instance
+      * @return The converted instance
+      */
+    def serializeVector(v: DenseVector, evaluator: Evaluator): PmmlInput = {
+      val getNameInput = getKeyFromModel(evaluator)
 
       getNameInput.zip(v.data).toMap
     }
   }
 
-  /** Converts a [[SparseVector]] to the internal type by mapping PMML model fields to vector values.
-    * Note that only existing values will be mapped
-    *
-    */
-  private[api] implicit object SparseVector2Map extends VectorConverter[SparseVector] {
 
-    def serializeVector(v: SparseVector, eval: Evaluator): PmmlInput = {
-      val getNameInput = getKeyFromModel(eval)
+  private[api] implicit object SparseVector2Map extends VectorConverter[SparseVector] {
+    /** Converts a [[SparseVector]] to the internal type by mapping PMML model fields to vector values.
+      * Note that only existing values will be mapped
+      *
+      * @param v The input Sparse vector
+      * @param evaluator The evaluator instance
+      * @return The converted instance
+      */
+    def serializeVector(v: SparseVector, evaluator: Evaluator): PmmlInput = {
+      val getNameInput = getKeyFromModel(evaluator)
 
       getNameInput.zip(toDenseData(v)).collect { case (key, Some(value)) => (key, value) }.toMap
     }
@@ -80,8 +92,8 @@ private[api] object VectorConverter {
     }
   }
 
-  private[api] implicit def applyConversion[T: VectorConverter, E <: Evaluator](dataVector: T, eval: E) =
-    implicitly[VectorConverter[T]].serializeVector(dataVector, eval)
+  private[api] implicit def applyConversion[T: VectorConverter, E <: Evaluator](dataVector: T, evaluator: E) =
+    implicitly[VectorConverter[T]].serializeVector(dataVector, evaluator)
 
   /** Extracts the key values of the model fields from [[Evaluator]] instance.
     *

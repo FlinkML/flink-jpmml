@@ -34,8 +34,9 @@ import org.xml.sax.InputSource
 import scala.collection.JavaConversions._
 import scala.util.Try
 
-/** Contains [[PmmlModel]] `fromReader` factory method; as singleton, it guarantees one and only copy of the
-  * model when the latter is requested.
+/** Contains [[PmmlModel]] `fromReader` factory method.
+  *
+  * As singleton, it guarantees one and only copy of the model when the latter is requested.
   *
   */
 object PmmlModel {
@@ -45,8 +46,8 @@ object PmmlModel {
   /** Loads the distributed path by [[io.radicalbit.flink.pmml.scala.api.reader.FsReader.buildDistributedPath]]
     * and construct a [[PmmlModel]] instance starting from `evalauatorInstance`
     *
-    * @param reader
-    * @return
+    * @param reader The instance providing method in order to read the model from distributed backends lazily
+    * @return [[PmmlModel]] instance from the Reader
     */
   private[api] def fromReader(reader: ModelReader): PmmlModel = {
     val readerFromFs = reader.buildDistributedPath
@@ -61,18 +62,18 @@ object PmmlModel {
 
 }
 
-/** Provides to the user the model instance and its methods; it is provided to the user as input of evaluate UDF
+/** Provides to the user the model instance and its methods.
+  *
+  * Users get the instance along the [[io.radicalbit.flink.pmml.scala.RichDataStream.evaluate]] UDF input.
   *
   * {{{
-  *   val toEvaluateStream: DataStream[Input]
-  *   val reader: ModelReader
   *   toEvaluateStream.evaluate(reader) { (input, model) =>
   *     val pmmlModel: PmmlModel = model
-  *     val prediction = model.evaluate(vectorized(input))
+  *     val prediction = model.predict(vectorized(input))
   *   }
   * }}}
   *
-  * and it contains prediction method. It implements the core logic of the project.
+  * This class contains [[PmmlModel#predict]] method and implements the core logic of the project.
   *
   * @param evaluator The PMML model instance
   */
@@ -83,14 +84,17 @@ class PmmlModel(private[api] val evaluator: Evaluator) extends Pipeline {
   /** Implements the entire prediction pipeline, which can be described as 4 main steps:
     *
     * - `validateInput` validates the input to be conform to PMML model size
+    *
     * - `prepareInput` prepares the input in full compliance to [[org.jpmml.evaluator.EvaluatorUtil.prepare]] JPMML method
+    *
     * - `evaluateInput` evaluates the input against inner PMML model instance and returns a Java Map output
+    *
     * - `extractTarget` extracts the target from evaluation result.
     *
     * As final action the pipelined statement is executed by [[io.radicalbit.flink.pmml.scala.models.Prediction]]
     *
     * @param inputVector the input event as a [[org.apache.flink.ml.math.Vector]] instance
-    * @param replaceNan An [[scala.Option]] describing a replace value for not defined vector values
+    * @param replaceNan A [[scala.Option]] describing a replace value for not defined vector values
     * @tparam V subclass of [[org.apache.flink.ml.math.Vector]]
     * @return [[io.radicalbit.flink.pmml.scala.models.Prediction]] instance
     */
@@ -108,9 +112,9 @@ class PmmlModel(private[api] val evaluator: Evaluator) extends Pipeline {
 
   /** Validates the input vector in size terms and converts it as a `Map[String, Any]` (see [[PmmlInput]])
     *
-    * @param v The input vector
+    * @param v The raw input vector
     * @param vec2Pmml The conversion function
-    * @return
+    * @return The converted instance
     */
   private[api] def validateInput(v: Vector)(implicit vec2Pmml: (Vector, Evaluator) => PmmlInput): PmmlInput = {
     val modelSize = evaluator.getActiveFields.size
@@ -124,9 +128,9 @@ class PmmlModel(private[api] val evaluator: Evaluator) extends Pipeline {
   /** Binds each field with input value and prepare the record to be evaluated
     * by [[EvaluatorUtil.prepare]] method.
     *
-    * @param input validated input as a [[Map]] keyed by field name
-    * @param replaceNaN optional replace value in case of missing values
-    * @return prepared input to be evaluated
+    * @param input Validated input as a [[Map]] keyed by field name
+    * @param replaceNaN Optional replace value in case of missing values
+    * @return Prepared input to be evaluated
     */
   private[api] def prepareInput(input: PmmlInput, replaceNaN: Option[Double]): Map[FieldName, FieldValue] = {
 
