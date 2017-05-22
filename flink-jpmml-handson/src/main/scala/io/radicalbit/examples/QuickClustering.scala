@@ -9,7 +9,6 @@ import io.radicalbit.flink.pmml.scala.api.reader.ModelReader
 object QuickClustering {
   def main(args: Array[String]): Unit = {
     val env = StreamExecutionEnvironment.getExecutionEnvironment
-    env.setParallelism(2)
 
     val irisDatastream = irisSource(env)
     val irisToVector = irisDatastream.map(_.toVector)

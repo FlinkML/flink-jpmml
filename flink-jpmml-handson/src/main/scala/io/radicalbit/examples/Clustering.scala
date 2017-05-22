@@ -10,13 +10,11 @@ object Clustering {
   def main(args: Array[String]): Unit = {
     val env = StreamExecutionEnvironment.getExecutionEnvironment
 
-    env.setParallelism(4)
-
     //Read data from custom iris source
     val irisDataStream = irisSource(env)
 
     //Load model
-    val modelReader = ModelReader(getClass.getResource("/kmeans.xml").getPath)
+    val modelReader = ModelReader("/kmeans.xml")
 
     //Using evaluate operator
     val prediction = irisDataStream.evaluate(modelReader) {
