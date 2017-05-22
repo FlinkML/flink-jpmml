@@ -34,7 +34,7 @@ import org.xml.sax.InputSource
 import scala.collection.JavaConversions._
 import scala.util.Try
 
-/** Contains [[PmmlModel.fromReader]] factory method; as singleton, it guarantees one and only copy of the
+/** Contains [[PmmlModel]] `fromReader` factory method; as singleton, it guarantees one and only copy of the
   * model when the latter is requested.
   *
   */
@@ -82,18 +82,17 @@ class PmmlModel(private[api] val evaluator: Evaluator) extends Pipeline {
 
   /** Implements the entire prediction pipeline, which can be described as 4 main steps:
     *
-    * - validates the input to be conform to PMML model size [[PmmlModel.validateInput]]
-    * - prepares the input in full compliance to [[EvaluatorUtil.prepare]] JPMML method [[PmmlModel.prepareInput]]
-    * - evaluates the input against inner PMML model instance and returns a [[util.Map]]
-    * output [[PmmlModel.evaluateInput]]
-    * - extracts the target from evaluation result.
+    * - `validateInput` validates the input to be conform to PMML model size
+    * - `prepareInput` prepares the input in full compliance to [[org.jpmml.evaluator.EvaluatorUtil.prepare]] JPMML method
+    * - `evaluateInput` evaluates the input against inner PMML model instance and returns a Java Map output
+    * - `extractTarget` extracts the target from evaluation result.
     *
-    * As final action the [[Try]] statement is executed by [[Prediction.extractPrediction]] method.
+    * As final action the pipelined statement is executed by [[io.radicalbit.flink.pmml.scala.models.Prediction]]
     *
-    * @param inputVector the input event as a [[Vector]] instance
-    * @param replaceNan An [[Option]] describing a replace value for not defined vector values
-    * @tparam V subclass of [[Vector]]
-    * @return [[Prediction]] instance
+    * @param inputVector the input event as a [[org.apache.flink.ml.math.Vector]] instance
+    * @param replaceNan An [[scala.Option]] describing a replace value for not defined vector values
+    * @tparam V subclass of [[org.apache.flink.ml.math.Vector]]
+    * @return [[io.radicalbit.flink.pmml.scala.models.Prediction]] instance
     */
   final def predict[V <: Vector](inputVector: V, replaceNan: Option[Double] = None): Prediction = {
     val result = Try {
@@ -107,7 +106,7 @@ class PmmlModel(private[api] val evaluator: Evaluator) extends Pipeline {
     Prediction.extractPrediction(result)
   }
 
-  /** Validates the input vector in size terms and converts it as a `Map[String, Any] (see [[PmmlInput]])
+  /** Validates the input vector in size terms and converts it as a `Map[String, Any]` (see [[PmmlInput]])
     *
     * @param v The input vector
     * @param vec2Pmml The conversion function

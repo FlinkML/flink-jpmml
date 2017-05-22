@@ -23,8 +23,8 @@ import org.apache.flink.ml.math.{DenseVector, SparseVector, Vector}
 
 import scala.collection.JavaConversions._
 
-/** Type Class Pattern implementing converters from Flink [[Vector]] instances to
-  * internal types; the existing fields (i.e. value defined fields) are modeled as [[Map]]s; the
+/** Type Class Pattern implementing converters from Flink [[org.apache.flink.ml.math.Vector]] instances to
+  * internal types; the existing fields (i.e. value defined fields) are modeled as [[scala.collection.mutable.Map]]s; the
   * not existing fields (i.e. NaN values) will not be mapped within the Internal type
   *
   *

@@ -86,7 +86,7 @@ private[api] trait Pipeline { self: PmmlModel =>
   /** Casts a String to Double if the outcome is a String, returns the Double otherwise.
     *
     * @param target The extracted target
-    * @throws java.lang.ClassCastException if the outcome could not be casted to Double
+    * @throws scala.ClassCastException if the outcome could not be casted to Double
     * @return The outcome as a Double
     */
   @throws(classOf[ClassCastException])

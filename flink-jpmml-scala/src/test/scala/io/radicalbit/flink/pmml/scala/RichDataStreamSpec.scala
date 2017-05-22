@@ -52,9 +52,6 @@ object RichDataStreamSpec extends FlinkTestKitCompanion[Prediction] {
 
 }
 
-/** Tests [[RichDataStream]] implicit class
-  *
-  */
 class RichDataStreamSpec extends FlinkPipelineTestKit[Input, Prediction] with PmmlLoaderKit {
 
   import RichDataStreamSpec._
