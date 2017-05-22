@@ -24,11 +24,19 @@ import org.apache.flink.core.fs.Path
 
 import scala.util.control.Exception.allCatch
 
+/** Self type trait extending [[ModelReader]] features by providing automatic
+  * path building, allowing to load models from any Flink supported distributed backend
+  *
+  */
 private[api] trait FsReader { self: ModelReader =>
 
   private def closable[T <: Closeable, R](t: T)(f: T => R): R =
     allCatch.andFinally(t.close()).apply(f(t))
 
+  /** Loan pattern ensuring the resource is loaded once and then closed.
+    *
+    * @return
+    */
   private[api] def buildDistributedPath: String = {
     val pathFs = new Path(self.sourcePath)
     val fs = pathFs.getFileSystem

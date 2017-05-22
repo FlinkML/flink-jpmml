@@ -18,4 +18,8 @@
 
 package io.radicalbit.flink.pmml.scala.api.reader
 
+/** Provides the abstraction for input PMML model
+  *
+  * @param sourcePath the PMML path addressing the model
+  */
 case class ModelReader(sourcePath: String) extends FsReader

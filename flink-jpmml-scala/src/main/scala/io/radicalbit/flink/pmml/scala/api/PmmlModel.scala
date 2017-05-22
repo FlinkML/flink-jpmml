@@ -74,7 +74,7 @@ object PmmlModel {
   *
   * and it contains prediction method. It implements the core logic of the project.
   *
-  * @param evaluator
+  * @param evaluator The PMML model instance
   */
 class PmmlModel(private[api] val evaluator: Evaluator) extends Pipeline {
 
@@ -93,7 +93,7 @@ class PmmlModel(private[api] val evaluator: Evaluator) extends Pipeline {
     * @param inputVector the input event as a [[Vector]] instance
     * @param replaceNan An [[Option]] describing a replace value for not defined vector values
     * @tparam V subclass of [[Vector]]
-    * @return [[Prediction]]
+    * @return [[Prediction]] instance
     */
   final def predict[V <: Vector](inputVector: V, replaceNan: Option[Double] = None): Prediction = {
     val result = Try {
@@ -107,10 +107,27 @@ class PmmlModel(private[api] val evaluator: Evaluator) extends Pipeline {
     Prediction.extractPrediction(result)
   }
 
-  /**
-    * Contains the logic to validate an input Map and wrap it in the dedicated PMML classes.
-    * @param input The stream input vector
+  /** Validates the input vector in size terms and converts it as a `Map[String, Any] (see [[PmmlInput]])
+    *
+    * @param v The input vector
+    * @param vec2Pmml The conversion function
     * @return
+    */
+  private[api] def validateInput(v: Vector)(implicit vec2Pmml: (Vector, Evaluator) => PmmlInput): PmmlInput = {
+    val modelSize = evaluator.getActiveFields.size
+
+    if (v.size != modelSize)
+      throw new InputValidationException(s"input vector $v size ${v.size} is not conform to model size $modelSize")
+    else
+      vec2Pmml(v, evaluator)
+  }
+
+  /** Binds each field with input value and prepare the record to be evaluated
+    * by [[EvaluatorUtil.prepare]] method.
+    *
+    * @param input validated input as a [[Map]] keyed by field name
+    * @param replaceNaN optional replace value in case of missing values
+    * @return prepared input to be evaluated
     */
   private[api] def prepareInput(input: PmmlInput, replaceNaN: Option[Double]): Map[FieldName, FieldValue] = {
 
@@ -124,23 +141,19 @@ class PmmlModel(private[api] val evaluator: Evaluator) extends Pipeline {
       .toMap
   }
 
-  private[api] def validateInput(v: Vector)(implicit vec2Pmml: (Vector, Evaluator) => PmmlInput): PmmlInput = {
-    val modelSize = evaluator.getActiveFields.size
-
-    if (v.size != modelSize)
-      throw new InputValidationException(s"input vector $v size ${v.size} is not conform to model size $modelSize")
-    else
-      vec2Pmml(v, evaluator)
-  }
-
-  /** Used to evaluate an input against a PMML model. It returns the raw output of the JPMML evaluator
+  /** Evaluates the prepared input against the PMML model
     *
-    * @param preparedInput
-    * @return
+    * @param preparedInput JPMML prepared input as `Map[FieldName, FieldValue]`
+    * @return JPMML output result as a Java map
     */
   private[api] def evaluateInput(preparedInput: Map[FieldName, FieldValue]): util.Map[FieldName, _] =
     evaluator.evaluate(preparedInput)
 
+  /** Extracts the target from evaluation result
+    * @throws JPMMLExtractionException if the target couldn't be extracted
+    * @param evaluationResult outcome from JPMML evaluation
+    * @return The prediction value as a [Double]
+    */
   private[api] def extractTarget(evaluationResult: java.util.Map[FieldName, _]): Double = {
     val targets = extractTargetFields(evaluationResult)
 
