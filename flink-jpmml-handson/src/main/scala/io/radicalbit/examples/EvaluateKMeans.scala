@@ -14,7 +14,7 @@ object EvaluateKMeans {
     implicit val env = StreamExecutionEnvironment.getExecutionEnvironment
 
     env.getConfig.setGlobalJobParameters(params)
-    val inputModel = ensureParams(params)
+    val (inputModel, output) = ensureParams(params)
 
     //Read data from custom iris source
     val irisDataStream = irisSource(env)
@@ -28,11 +28,11 @@ object EvaluateKMeans {
       case (event, model) => {
         val vectorized = event.toVector
         val prediction = model.predict(vectorized, Some(0.0))
-        Map(event -> prediction)
+        (event, prediction.value.getOrElse(-1.0))
       }
     }
 
-    prediction.print()
+    prediction.writeAsText(output)
 
     env.execute("Clustering example")
   }

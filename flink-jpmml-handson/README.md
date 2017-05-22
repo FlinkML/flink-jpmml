@@ -18,11 +18,11 @@ assembly
 
 3) Run the examples. If you want full predictions:
 ```
-./path/to/bin/flink run -c io.radicalbit.examples.Clustering --model path/to/pmml/model.pmml
+./path/to/bin/flink run -c io.radicalbit.examples.Clustering --model path/to/pmml/model.pmml --output /path/to/output
 ```
 Either you can employ the _quick_ predictor:
 ```
-./path/to/bin/flink run -c io.radicalbit.examples.QuickClustering --model path/to/pmml/model.pmml
+./path/to/bin/flink run -c io.radicalbit.examples.QuickClustering --model path/to/pmml/model.pmml --output /path/to/output
 ```
 
 

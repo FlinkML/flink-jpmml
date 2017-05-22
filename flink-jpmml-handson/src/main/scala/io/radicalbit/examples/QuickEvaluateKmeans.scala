@@ -13,7 +13,7 @@ object QuickEvaluateKmeans {
     val env = StreamExecutionEnvironment.getExecutionEnvironment
 
     env.getConfig.setGlobalJobParameters(params)
-    val inputModel = ensureParams(params)
+    val (inputModel, output) = ensureParams(params)
 
     //Read data from custom iris source
     val irisDatastream = irisSource(env)
@@ -25,7 +25,7 @@ object QuickEvaluateKmeans {
     val model = ModelReader(inputModel)
 
     //Quick evaluate
-    irisToVector.evaluate(model).print()
+    irisToVector.evaluate(model).writeAsText(output)
 
     env.execute("Quick evaluator Clustering")
   }
