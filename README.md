@@ -16,7 +16,7 @@ In order to getting started, you only need
 
 If you employ [sbt](http://www.scala-sbt.org/), then add the following dependency to your project
 ```
-"io.radicalbit" %% "flink-jpmml-scala" % "0.4.2"
+"io.radicalbit" %% "flink-jpmml-scala" % "0.4.4"
 ```
 
 For [maven](https://maven.apache.org/) users instead
@@ -25,10 +25,13 @@ For [maven](https://maven.apache.org/) users instead
   <dependency>
     <groupId>io.radicalbit</groupId>
     <artifactId>flink-jpmml-scala</artifactId>
-    <version>0.4.0</version>
+    <version>0.4.4</version>
   </dependency>
 </dependencies>
 ```
+
+Keep in mind you will need also Flink `scala-core` `flink-streaming` and `flink-clients` libraries.
+
 Lets start.
 
 ### Getting Started ###

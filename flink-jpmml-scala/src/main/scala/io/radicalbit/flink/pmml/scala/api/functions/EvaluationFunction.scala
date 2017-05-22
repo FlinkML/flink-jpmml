@@ -1,3 +1,21 @@
+/*
+ * flink-jpmml
+ * Copyright (C) 2017 Radicalbit
+
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package io.radicalbit.flink.pmml.scala.api.functions
 
 import io.radicalbit.flink.pmml.scala.ModelLoadingException
@@ -9,6 +27,14 @@ import org.apache.flink.configuration.Configuration
 
 import scala.util.{Failure, Success, Try}
 
+/** Abstract class extending a [[RichFlatMapFunction]]; it provides:
+  * the `evaluator` lazy evaluated object as instance of [[PmmlModel]]
+  * the open method as a builder of the evaluator instance at operator initialization time
+  *
+  * @param reader The model reader instance coupled with the model source path
+  * @tparam IN The input Type
+  * @tparam OUT The output Type
+  */
 private[scala] abstract class EvaluationFunction[IN, OUT](reader: ModelReader)
     extends RichFlatMapFunction[IN, OUT]
     with LazyLogging {
