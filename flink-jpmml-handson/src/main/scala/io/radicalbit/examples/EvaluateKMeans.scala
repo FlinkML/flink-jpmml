@@ -2,12 +2,12 @@ package io.radicalbit.examples
 
 import org.apache.flink.streaming.api.scala._
 import io.radicalbit.examples.model.IrisSource._
-import io.radicalbit.examples.util.EnsureParameters.ensureParams
+import io.radicalbit.examples.util.EnsureParameters
 import io.radicalbit.flink.pmml.scala.api.reader.ModelReader
 import io.radicalbit.flink.pmml.scala._
 import org.apache.flink.api.java.utils.ParameterTool
 
-object EvaluateKMeans {
+object EvaluateKMeans extends EnsureParameters{
 
   def main(args: Array[String]): Unit = {
     val params: ParameterTool = ParameterTool.fromArgs(args)
