@@ -93,9 +93,10 @@ private[api] trait Pipeline { self: PmmlModel =>
     * @return The outcome as a Double
     */
   @throws(classOf[ClassCastException])
-  protected def extractTargetValue(target: Any): Double = target match {
-    case s: String => s.toDouble
-    case d: Double => d
+  protected def extractTargetValue(target: Any): Option[Double] = target match {
+    case s: String => Some(s.toDouble)
+    case d: Double => Some(d)
+    case _ => None
   }
 
 }

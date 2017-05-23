@@ -16,7 +16,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with flink-JPMML.  If not, see <http://www.gnu.org/licenses/>.
- *         
+ *
  */
 
 package io.radicalbit.flink.pmml.scala.api
@@ -223,7 +223,6 @@ class PmmlModelSpec extends WordSpec with Matchers with PmmlLoaderKit with PmmlE
       val outputField = buildOutputField("PCluster", OpType.CATEGORICAL, DataType.STRING)
 
       val result: Map[FieldName, _] = Map(outputField.getName -> outputField)
-
       an[JPMMLExtractionException] shouldBe thrownBy {
         model.extractTarget(result)
       }

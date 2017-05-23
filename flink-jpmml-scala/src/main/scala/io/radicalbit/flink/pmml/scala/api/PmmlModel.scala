@@ -163,10 +163,13 @@ class PmmlModel(private[api] val evaluator: Evaluator) extends Pipeline {
   private[api] def extractTarget(evaluationResult: java.util.Map[FieldName, _]): Double = {
     val targets = extractTargetFields(evaluationResult)
 
-    Option(targets.head._2) match {
-      case Some(target) => extractTargetValue(target)
-      case None => throw new JPMMLExtractionException("Target value is null.")
-    }
+//    Option(targets.head._2) match {
+//      case Some(target) => extractTargetValue(target)
+//      case None => throw new JPMMLExtractionException("Target value is null.")
+//    }
+    targets.headOption.flatMap {
+      case (_, target) => extractTargetValue(target)
+    } getOrElse (throw new JPMMLExtractionException("Target value is null."))
   }
 
 }
