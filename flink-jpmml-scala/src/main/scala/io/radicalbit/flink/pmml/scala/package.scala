@@ -104,19 +104,19 @@ package object scala {
     *
     * @param msg
     */
-  private[scala] class InputValidationException(msg: String) extends Exception(msg)
+  private[scala] class InputValidationException(msg: String) extends RuntimeException(msg)
 
   /** Models [[org.jpmml.evaluator.EvaluatorUtil.prepare()]] method failure
     *
     * @param msg
     */
-  private[scala] class InputPreparationException(msg: String) extends Exception(msg)
+  private[scala] class InputPreparationException(msg: String) extends RuntimeException(msg)
 
   /** Models empty result from [[org.jpmml.evaluator.ModelEvaluator]] evaluation
     *
     * @param msg
     */
-  private[scala] class JPMMLExtractionException(msg: String) extends Exception(msg)
+  private[scala] class JPMMLExtractionException(msg: String) extends RuntimeException(msg)
 
   /** Models failure on loading PMML model from distributed system
     *
