@@ -49,7 +49,7 @@ lazy val `flink-jpmml-handson` = project
   .settings(LicenseSetting.settings: _*)
   .settings(Commons.settings: _*)
   .settings(PublishSettings.settings: _*)
-  .settings(libraryDependencies ++= Dependencies.Handson.addons)
+  .settings(libraryDependencies ++= Dependencies.Handson.libraries)
   .dependsOn(`flink-jpmml-scala`)
 
 lazy val `flink-jpmml-java` = project
@@ -57,7 +57,7 @@ lazy val `flink-jpmml-java` = project
   .settings(LicenseSetting.settings: _*)
   .settings(Commons.settings: _*)
   .settings(PublishSettings.settings: _*)
-  .settings(libraryDependencies ++= Dependencies.Java.addons)
+  .settings(libraryDependencies ++= Dependencies.Java.libraries)
   .dependsOn(`flink-jpmml-assets`)
 
 lazy val `flink-jpmml-scala` = project
@@ -65,7 +65,7 @@ lazy val `flink-jpmml-scala` = project
   .settings(LicenseSetting.settings: _*)
   .settings(Commons.settings: _*)
   .settings(PublishSettings.settings: _*)
-  .settings(libraryDependencies ++= Dependencies.Scala.addons)
+  .settings(libraryDependencies ++= Dependencies.Scala.libraries)
   .dependsOn(`flink-jpmml-assets`)
 
 onLoad in Global := (Command.process("scalafmt", _: State)) compose (onLoad in Global).value
@@ -78,5 +78,3 @@ assemblyOption in assembly := (assemblyOption in assembly).value.copy(includeSca
 
 // assign default options to JUnit test execution
 testOptions += Tests.Argument(TestFrameworks.JUnit, "-q", "-v")
-
-fork in test := true

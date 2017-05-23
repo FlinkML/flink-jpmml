@@ -25,7 +25,7 @@ object Dependencies {
 
   object Scala {
 
-    lazy val addons = Seq(
+    lazy val libraries = Seq(
       flink.scalaCore % Provided,
       flink.streaming % Provided,
       flink.clients % Provided,
@@ -44,7 +44,7 @@ object Dependencies {
 
   object Java {
 
-    lazy val addons = Seq(
+    lazy val libraries = Seq(
       flink.core % Provided,
       flink.streaming % Provided,
       flink.clients % Provided,
@@ -62,7 +62,7 @@ object Dependencies {
 
   object Handson {
 
-    lazy val addons = Seq(
+    lazy val libraries = Seq(
       flink.scalaCore % Provided,
       flink.streaming % Provided
     )
