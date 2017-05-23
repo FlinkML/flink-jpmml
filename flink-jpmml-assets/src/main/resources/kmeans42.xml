@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <!--
 
    Copyright (c) 2017 Radicalbit
@@ -20,7 +19,7 @@
            
 -->
 
-<PMML xmlns="http://www.dmg.org/PMML-4_2">
+<PMML version="4.2" xmlns="http://www.dmg.org/PMML-4_2">
     <Header description="k-means clustering">
         <Application name="Apache Spark MLlib" version="1.4.0-SNAPSHOT"/>
         <Timestamp>2015-04-28T07:25:30</Timestamp>

@@ -1,6 +1,6 @@
 import de.heikoseeberger.sbtheader.FileType
 import de.heikoseeberger.sbtheader.HeaderPlugin.autoImport._
-import sbt.{Def, HiddenFileFilter}
+import sbt.Def
 
 object LicenseSetting {
 

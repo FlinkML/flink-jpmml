@@ -5,8 +5,7 @@ resolvers in ThisBuild ++= Seq(
 
 lazy val root = project
   .in(file("."))
-  .settings(LicenseSetting.settings: _*)
-  .enablePlugins(ScalaUnidocPlugin, AutomateHeaderPlugin)
+  .enablePlugins(ScalaUnidocPlugin)
   .settings(
     name := "flink-jpmml",
     crossScalaVersions := Seq("2.10.6", "2.11.8"),
@@ -19,11 +18,13 @@ lazy val root = project
   .aggregate(`flink-jpmml-handson`, `flink-jpmml-scala`, `flink-jpmml-java`, `flink-jpmml-assets`)
 
 lazy val `flink-jpmml-assets` = project
+  .enablePlugins(AutomateHeaderPlugin)
   .settings(LicenseSetting.settings: _*)
   .settings(Commons.settings: _*)
   .settings(PublishSettings.settings: _*)
 
 lazy val `flink-jpmml-handson` = project
+  .enablePlugins(AutomateHeaderPlugin)
   .settings(LicenseSetting.settings: _*)
   .settings(Commons.settings: _*)
   .settings(PublishSettings.settings: _*)
@@ -31,6 +32,7 @@ lazy val `flink-jpmml-handson` = project
   .dependsOn(`flink-jpmml-scala`)
 
 lazy val `flink-jpmml-java` = project
+  .enablePlugins(AutomateHeaderPlugin)
   .settings(LicenseSetting.settings: _*)
   .settings(Commons.settings: _*)
   .settings(PublishSettings.settings: _*)
@@ -38,13 +40,12 @@ lazy val `flink-jpmml-java` = project
   .dependsOn(`flink-jpmml-assets`)
 
 lazy val `flink-jpmml-scala` = project
+  .enablePlugins(AutomateHeaderPlugin)
   .settings(LicenseSetting.settings: _*)
   .settings(Commons.settings: _*)
   .settings(PublishSettings.settings: _*)
   .settings(libraryDependencies ++= Dependencies.Scala.addons)
   .dependsOn(`flink-jpmml-assets`)
-
-//excludeFilter.in(unmanagedSources.in(headerCreate)) := HiddenFileFilter || "*.xml"
 
 onLoad in Global := (Command.process("scalafmt", _: State)) compose (onLoad in Global).value
 
