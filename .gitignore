@@ -1,4 +1,4 @@
-/Flink-JPMML.iml
+/*.iml
 /flink-jpmml-handson.iml
 ### Java template
 
@@ -23,16 +23,14 @@ hs_err_pid*
 .history
 .lib/
 dist/*
-target/
-flink-jpmml-handson/target
-flink-jpmml-scala/target
-flink-jpmml-java/target
+**/target
+
 lib_managed/
 src_managed/
 project/boot/
 project/plugins/project/
 project/project/
-project/target/
+
 
 mainRunner
 # Scala-IDE specific
@@ -41,6 +39,3 @@ mainRunner
 
 # IntelliJ specific
 .idea
-
-flink-jpmml-handson/src/main/scala/io/radicalbit/example/
-flink-jpmml-handson/src/main/scala/io/radicalbit/examples/
