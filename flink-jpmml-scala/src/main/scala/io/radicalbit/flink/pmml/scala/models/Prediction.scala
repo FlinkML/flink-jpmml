@@ -47,17 +47,24 @@ object Prediction extends LazyLogging {
     * @return
     */
   private[scala] def onFailedPrediction(throwable: Throwable): Prediction = {
+
     throwable match {
-      case e: JPMMLExtractionException => logger.warn("Error while extracting results. The cause is: {}", e.getMessage)
-      case e: InputPreparationException => logger.warn("Error while preparing input. The cause is: {}", e.getMessage)
-      case e: InputValidationException => logger.warn("Error while validate input. The cause is: {}", e.getMessage)
-      case e: EvaluationException => logger.warn("Error while evaluate model. The cause is: {}", e.getMessage)
-      case e: ClassCastException => logger.error("Error while extract target. The cause is: {}", e.getMessage)
-      case NonFatal(e) => logger.error("Error. The cause is: {}\n", e.getMessage)
+      case e: JPMMLExtractionException =>
+        logger.warn("Error while extracting results. The cause is: {}", e.getMessage, e)
+      case e: InputPreparationException =>
+        logger.warn("Error while preparing input. The cause is: {}", e.getMessage, e)
+      case e: InputValidationException => logger.warn("Error while validate input. The cause is: {}", e.getMessage, e)
+      case e: EvaluationException => logger.warn("Error while evaluate model. The cause is: {}", e.getMessage, e)
+      case e: ClassCastException => logger.error("Error while extract target. The cause is: {}", e.getMessage, e)
+      case NonFatal(e) => logger.error("Error. The cause is: {}\n", e.getMessage, e)
     }
+
     emptyTarget
+
   }
+
   private def emptyTarget = Prediction(EmptyScore)
+
 }
 
 /** Models the result output container
