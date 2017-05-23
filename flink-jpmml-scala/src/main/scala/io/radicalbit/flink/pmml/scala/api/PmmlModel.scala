@@ -59,9 +59,8 @@ object PmmlModel {
     new PmmlModel(evaluatorInstance.newModelEvaluator(JAXBUtil.unmarshalPMML(result)))
   }
 
-  private def fromFilteredSource(PMMLPath: String) = {
+  private def fromFilteredSource(PMMLPath: String) =
     JAXBUtil.createFilteredSource(new InputSource(new StringReader(PMMLPath)), new ImportFilter())
-  }
 
 }
 
@@ -139,12 +138,11 @@ class PmmlModel(private[api] val evaluator: Evaluator) extends Pipeline {
 
     val activeFields = evaluator.getActiveFields
 
-    activeFields
-      .map(field => {
-        val rawValue = input.get(field.getName.getValue).orElse(replaceNaN).orNull
-        prepareAndEmit(Try { EvaluatorUtil.prepare(field, rawValue) }, field.getName)
-      })
-      .toMap
+    activeFields.map { field =>
+      val rawValue = input.get(field.getName.getValue).orElse(replaceNaN).orNull
+      prepareAndEmit(Try { EvaluatorUtil.prepare(field, rawValue) }, field.getName)
+    }.toMap
+
   }
 
   /** Evaluates the prepared input against the PMML model
