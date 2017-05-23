@@ -52,7 +52,7 @@ private[api] trait Pipeline { self: PmmlModel =>
     outcome match {
       case Success(value) => (field, value)
       case Failure(_) =>
-        throw new InputPreparationException("The " + field.getValue + " field JPMML finalization failed.")
+        throw new InputPreparationException(s"The ${field.getValue} field JPMML finalization failed.")
     }
 
   /** Extracts all the target fields specified by the PMML document.
