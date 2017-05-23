@@ -60,7 +60,7 @@ object Dependencies {
     )
   }
 
-  object Handson {
+  object Examples {
 
     lazy val libraries = Seq(
       flink.scalaCore % Provided,

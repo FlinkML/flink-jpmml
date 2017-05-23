@@ -23,7 +23,7 @@ lazy val mainRunner = project
   .in(file("mainRunner"))
   .dependsOn(
     RootProject(file(".")),
-    ProjectRef(file("."), "flink-jpmml-handson")
+    ProjectRef(file("."), "flink-jpmml-examples")
   )
   .settings(
     // we set all provided dependencies to none, so that they are included in the classpath of mainRunner
@@ -34,7 +34,7 @@ lazy val mainRunner = project
         module
       }
     },
-    libraryDependencies := (libraryDependencies in ProjectRef(file("."), "flink-jpmml-handson")).value.map { module =>
+    libraryDependencies := (libraryDependencies in ProjectRef(file("."), "flink-jpmml-examples")).value.map { module =>
       if (module.configurations.equals(Some("provided"))) {
         module.copy(configurations = None)
       } else {

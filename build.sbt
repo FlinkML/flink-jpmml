@@ -33,10 +33,10 @@ lazy val root = project
     publish := {},
     publishLocal := {},
     unidocProjectFilter in (ScalaUnidoc, unidoc) := inAnyProject -- inProjects(`flink-jpmml-java`,
-                                                                               `flink-jpmml-handson`,
+                                                                               `flink-jpmml-examples`,
                                                                                `flink-jpmml-assets`)
   )
-  .aggregate(`flink-jpmml-handson`, `flink-jpmml-scala`, `flink-jpmml-java`, `flink-jpmml-assets`)
+  .aggregate(`flink-jpmml-examples`, `flink-jpmml-scala`, `flink-jpmml-java`, `flink-jpmml-assets`)
 
 lazy val `flink-jpmml-assets` = project
   .enablePlugins(AutomateHeaderPlugin)
@@ -44,12 +44,12 @@ lazy val `flink-jpmml-assets` = project
   .settings(Commons.settings: _*)
   .settings(PublishSettings.settings: _*)
 
-lazy val `flink-jpmml-handson` = project
+lazy val `flink-jpmml-examples` = project
   .enablePlugins(AutomateHeaderPlugin)
   .settings(LicenseSetting.settings: _*)
   .settings(Commons.settings: _*)
   .settings(PublishSettings.settings: _*)
-  .settings(libraryDependencies ++= Dependencies.Handson.libraries)
+  .settings(libraryDependencies ++= Dependencies.Examples.libraries)
   .dependsOn(`flink-jpmml-scala`)
 
 lazy val `flink-jpmml-java` = project
