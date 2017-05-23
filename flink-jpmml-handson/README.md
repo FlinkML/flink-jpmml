@@ -18,12 +18,12 @@ assembly
 
 3) Run the examples. If you want full predictions:
 ```
-./path/to/bin/flink run -c io.radicalbit.examples.Clustering --model path/to/pmml/model.pmml --output /path/to/output
+./path/to/bin/flink run -c io.radicalbit.examples.EvaluateKmeans --model path/to/pmml/model.pmml --output /path/to/output
 ```
 Either you can employ the _quick_ predictor:
 ```
-./path/to/bin/flink run -c io.radicalbit.examples.QuickClustering --model path/to/pmml/model.pmml --output /path/to/output
+./path/to/bin/flink run -c io.radicalbit.examples.QuickEvaluateKmeans --model path/to/pmml/model.pmml --output /path/to/output
 ```
 
 
-Both above jobs log out predictions to Flink `log/` directory.
+Both above jobs log out predictions to output path.
