@@ -1,19 +1,22 @@
 /*
- * flink-jpmml
- * Copyright (C) 2017 Radicalbit
-
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
+ *
+ * Copyright (c) 2017 Radicalbit
+ *
+ * This file is part of flink-JPMML
+ *
+ * flink-JPMML is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
-
- * This program is distributed in the hope that it will be useful,
+ *
+ * flink-JPMML is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
-
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with flink-JPMML.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 package io.radicalbit.flink.pmml.scala.api
@@ -56,9 +59,8 @@ object PmmlModel {
     new PmmlModel(evaluatorInstance.newModelEvaluator(JAXBUtil.unmarshalPMML(result)))
   }
 
-  private def fromFilteredSource(PMMLPath: String) = {
+  private def fromFilteredSource(PMMLPath: String) =
     JAXBUtil.createFilteredSource(new InputSource(new StringReader(PMMLPath)), new ImportFilter())
-  }
 
 }
 
@@ -136,12 +138,11 @@ class PmmlModel(private[api] val evaluator: Evaluator) extends Pipeline {
 
     val activeFields = evaluator.getActiveFields
 
-    activeFields
-      .map(field => {
-        val rawValue = input.get(field.getName.getValue).orElse(replaceNaN).orNull
-        prepareAndEmit(Try { EvaluatorUtil.prepare(field, rawValue) }, field.getName)
-      })
-      .toMap
+    activeFields.map { field =>
+      val rawValue = input.get(field.getName.getValue).orElse(replaceNaN).orNull
+      prepareAndEmit(Try { EvaluatorUtil.prepare(field, rawValue) }, field.getName)
+    }.toMap
+
   }
 
   /** Evaluates the prepared input against the PMML model
@@ -160,10 +161,10 @@ class PmmlModel(private[api] val evaluator: Evaluator) extends Pipeline {
   private[api] def extractTarget(evaluationResult: java.util.Map[FieldName, _]): Double = {
     val targets = extractTargetFields(evaluationResult)
 
-    Option(targets.head._2) match {
-      case Some(target) => extractTargetValue(target)
-      case None => throw new JPMMLExtractionException("Target value is null.")
-    }
+    targets.headOption.flatMap {
+      case (_, target) => extractTargetValue(target)
+    } getOrElse (throw new JPMMLExtractionException("Target value is null."))
+
   }
 
 }

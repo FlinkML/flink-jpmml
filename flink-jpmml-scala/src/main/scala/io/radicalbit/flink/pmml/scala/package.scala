@@ -1,19 +1,22 @@
 /*
- * flink-jpmml
- * Copyright (C) 2017 Radicalbit
-
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
+ *
+ * Copyright (c) 2017 Radicalbit
+ *
+ * This file is part of flink-JPMML
+ *
+ * flink-JPMML is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
-
- * This program is distributed in the hope that it will be useful,
+ *
+ * flink-JPMML is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
-
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with flink-JPMML.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 package io.radicalbit.flink.pmml
@@ -89,10 +92,8 @@ package object scala {
       */
     def evaluate(modelReader: ModelReader): DataStream[(Prediction, V)] =
       new RichDataStream[V](stream).evaluate(modelReader) { (vec, model) =>
-        {
-          val result: Prediction = model.predict(vec, None)
-          (result, vec)
-        }
+        val result: Prediction = model.predict(vec, None)
+        (result, vec)
       }
 
   }
@@ -101,19 +102,19 @@ package object scala {
     *
     * @param msg
     */
-  private[scala] class InputValidationException(msg: String) extends Exception(msg)
+  private[scala] class InputValidationException(msg: String) extends RuntimeException(msg)
 
   /** Models [[org.jpmml.evaluator.EvaluatorUtil.prepare()]] method failure
     *
     * @param msg
     */
-  private[scala] class InputPreparationException(msg: String) extends Exception(msg)
+  private[scala] class InputPreparationException(msg: String) extends RuntimeException(msg)
 
   /** Models empty result from [[org.jpmml.evaluator.ModelEvaluator]] evaluation
     *
     * @param msg
     */
-  private[scala] class JPMMLExtractionException(msg: String) extends Exception(msg)
+  private[scala] class JPMMLExtractionException(msg: String) extends RuntimeException(msg)
 
   /** Models failure on loading PMML model from distributed system
     *

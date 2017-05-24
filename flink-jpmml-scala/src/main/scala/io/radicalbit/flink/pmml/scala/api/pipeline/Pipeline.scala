@@ -1,19 +1,22 @@
 /*
- * flink-jpmml
- * Copyright (C) 2017 Radicalbit
-
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
+ *
+ * Copyright (c) 2017 Radicalbit
+ *
+ * This file is part of flink-JPMML
+ *
+ * flink-JPMML is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
-
- * This program is distributed in the hope that it will be useful,
+ *
+ * flink-JPMML is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
-
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with flink-JPMML.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 package io.radicalbit.flink.pmml.scala.api.pipeline
@@ -49,7 +52,7 @@ private[api] trait Pipeline { self: PmmlModel =>
     outcome match {
       case Success(value) => (field, value)
       case Failure(_) =>
-        throw new InputPreparationException("The " + field.getValue + " field JPMML finalization failed.")
+        throw new InputPreparationException(s"The ${field.getValue} field JPMML finalization failed.")
     }
 
   /** Extracts all the target fields specified by the PMML document.
@@ -90,9 +93,10 @@ private[api] trait Pipeline { self: PmmlModel =>
     * @return The outcome as a Double
     */
   @throws(classOf[ClassCastException])
-  protected def extractTargetValue(target: Any): Double = target match {
-    case s: String => s.toDouble
-    case d: Double => d
+  protected def extractTargetValue(target: Any): Option[Double] = target match {
+    case s: String => Some(s.toDouble)
+    case d: Double => Some(d)
+    case _ => None
   }
 
 }
