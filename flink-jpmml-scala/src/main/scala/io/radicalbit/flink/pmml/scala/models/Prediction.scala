@@ -63,7 +63,7 @@ object Prediction extends LazyLogging {
 
   }
 
-  private def emptyTarget = Prediction(EmptyScore)
+  private val emptyTarget = Prediction(EmptyScore)
 
 }
 

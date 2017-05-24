@@ -43,7 +43,7 @@ object Target {
 /** ADT sealed trait providing getters for values.
   *
   */
-sealed trait Target {
+sealed trait Target extends Serializable {
 
   /** Returns [[Score]]] if target has value, default value otherwise
     *
