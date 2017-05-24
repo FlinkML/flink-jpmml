@@ -16,7 +16,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with flink-JPMML.  If not, see <http://www.gnu.org/licenses/>.
- *
+ *         
  */
 
 package io.radicalbit.flink.pmml.scala.logging
