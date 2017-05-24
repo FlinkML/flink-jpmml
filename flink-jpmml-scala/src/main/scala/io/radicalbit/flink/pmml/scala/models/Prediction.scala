@@ -50,13 +50,13 @@ object Prediction extends LazyLogging {
 
     throwable match {
       case e: JPMMLExtractionException =>
-        logger.warn("Error while extracting results. The cause is: {}\n", e)
+        logger.warn("Error while extracting results. The cause is: {}\n", e.getMessage)
       case e: InputPreparationException =>
-        logger.warn("Error while preparing input. The cause is: {}\n", e)
-      case e: InputValidationException => logger.warn("Error while validate input. The cause is: {}\n", e)
-      case e: EvaluationException => logger.warn("Error while evaluate model. The cause is: {}\n", e)
-      case e: ClassCastException => logger.error("Error while extract target. The cause is: {}\n", e)
-      case NonFatal(e) => logger.error("Error. The cause is: {}\n", e)
+        logger.warn("Error while preparing input. The cause is: {}\n", e.getMessage)
+      case e: InputValidationException => logger.warn("Error while validate input. The cause is: {}\n", e.getMessage)
+      case e: EvaluationException => logger.warn("Error while evaluate model. The cause is: {}\n", e.getMessage)
+      case e: ClassCastException => logger.error("Error while extract target", e)
+      case NonFatal(e) => logger.error("Error", e)
     }
 
     emptyTarget
