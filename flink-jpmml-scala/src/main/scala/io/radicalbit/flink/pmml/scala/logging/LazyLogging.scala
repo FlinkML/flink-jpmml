@@ -18,7 +18,6 @@
 
 package io.radicalbit.flink.pmml.scala.logging
 
-import com.typesafe.scalalogging.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 /** Guarantees lazy logging; it is necessary in order to provide the feature along
@@ -28,7 +27,6 @@ import org.slf4j.LoggerFactory
   */
 trait LazyLogging {
 
-  protected lazy val logger = {
-    Logger(LoggerFactory.getLogger(getClass.getName))
-  }
+  protected lazy val logger = LoggerFactory.getLogger(getClass.getName)
+
 }

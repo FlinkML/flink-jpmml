@@ -10,7 +10,8 @@ scenario.
 ### Prerequisites ###
 In order to getting started, you only need
 * any well-known version of a PMML model (**3.2** or above)
-* a working Apache Flink version ([repo](https://github.com/apache/flink))
+* flink-jpmml is tested with the latest Flink (i.e. 1.2.1), but any working Apache Flink version 
+([repo](https://github.com/apache/flink)) should work properly.
 
 ### Adding `flink-jpmml` dependency ###
 
@@ -28,6 +29,21 @@ For [maven](https://maven.apache.org/) users instead
     <version>0.4.4</version>
   </dependency>
 </dependencies>
+```
+
+Eventually, you can publish `flink-jpmml` on your local repository. Then 
+
+1. execute within the flink-jpmml root
+```
+> sbt
+```
+2. select flink-jpmml-scala project
+```
+> project flink-jpmml-scala
+```
+3. publish the library to your local repo
+```
+> publishLocal
 ```
 
 Keep in mind you will need also Flink `scala-core` `flink-streaming` and `flink-clients` libraries.

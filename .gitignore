@@ -34,6 +34,10 @@ project/plugins/project/
 project/project/
 project/target/
 
+# logger backend
+flink-jpmml-scala/src/test/resources/
+flink-jpmml-scala/src/main/resources/
+
 mainRunner
 # Scala-IDE specific
 .scala_dependencies

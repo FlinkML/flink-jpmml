@@ -5,13 +5,13 @@ object Dependencies {
 
   object Scala {
 
-    lazy val addons = Seq(
+    lazy val libraries = Seq(
       flink.scalaCore % Provided,
       flink.streaming % Provided,
       flink.clients % Provided,
       flink.ml,
       jpmml.evaluator,
-      logging.`scala-logging`,
+      logging.slf4j,
       // Test utils
       asm.assembly % Test,
       flink.utils % Test,
@@ -24,7 +24,7 @@ object Dependencies {
 
   object Java {
 
-    lazy val addons = Seq(
+    lazy val libraries = Seq(
       flink.core % Provided,
       flink.streaming % Provided,
       flink.clients % Provided,
@@ -42,7 +42,7 @@ object Dependencies {
 
   object Handson {
 
-    lazy val addons = Seq(
+    lazy val libraries = Seq(
       flink.scalaCore % Provided,
       flink.streaming % Provided
     )
@@ -66,9 +66,9 @@ object Dependencies {
   }
 
   object logging {
-    lazy val namespace = "com.typesafe.scala-logging"
-    lazy val version = "2.1.2"
-    lazy val `scala-logging` = namespace %% "scala-logging-slf4j" % version
+    lazy val namespace = "org.slf4j"
+    lazy val version = "1.7.7"
+    lazy val slf4j = namespace % "slf4j-api" % version
   }
 
   /*** Test utils ***/
