@@ -96,6 +96,7 @@ object ModelReaderSpec {
     """.stripMargin
 
 }
+
 class ModelReaderSpec extends WordSpec with BeforeAndAfter with Matchers {
 
   import ModelReaderSpec._

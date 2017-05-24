@@ -50,12 +50,11 @@ private[api] object VectorConverter {
       * @param evaluator Evaluator instance as [[Evaluator]]
       * @return The converted instance (could be either `Dense` or `Sparse`
       */
-    def serializeVector(v: Vector, evaluator: Evaluator): PmmlInput = {
-      v match {
-        case denseVector: DenseVector => DenseVector2Map.serializeVector(denseVector, evaluator)
-        case sparseVector: SparseVector => SparseVector2Map.serializeVector(sparseVector, evaluator)
-      }
+    def serializeVector(v: Vector, evaluator: Evaluator): PmmlInput = v match {
+      case denseVector: DenseVector => DenseVector2Map.serializeVector(denseVector, evaluator)
+      case sparseVector: SparseVector => SparseVector2Map.serializeVector(sparseVector, evaluator)
     }
+
   }
 
   private[api] implicit object DenseVector2Map extends VectorConverter[DenseVector] {
@@ -88,11 +87,10 @@ private[api] object VectorConverter {
       getNameInput.zip(toDenseData(v)).collect { case (key, Some(value)) => (key, value) }.toMap
     }
 
-    private def toDenseData(sparseVector: SparseVector): Seq[Option[Any]] = {
+    private def toDenseData(sparseVector: SparseVector): Seq[Option[Any]] =
       (0 to sparseVector.size).map { index =>
         if (sparseVector.indices.contains(index)) Some(sparseVector(index)) else None
       }
-    }
 
   }
 

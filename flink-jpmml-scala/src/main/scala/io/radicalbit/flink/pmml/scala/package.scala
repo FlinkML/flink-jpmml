@@ -92,10 +92,8 @@ package object scala {
       */
     def evaluate(modelReader: ModelReader): DataStream[(Prediction, V)] =
       new RichDataStream[V](stream).evaluate(modelReader) { (vec, model) =>
-        {
-          val result: Prediction = model.predict(vec, None)
-          (result, vec)
-        }
+        val result: Prediction = model.predict(vec, None)
+        (result, vec)
       }
 
   }

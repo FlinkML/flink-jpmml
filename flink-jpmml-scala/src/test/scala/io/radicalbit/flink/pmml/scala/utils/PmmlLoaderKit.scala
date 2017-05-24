@@ -41,9 +41,8 @@ trait PmmlLoaderKit {
     val NotExistingPath: String = "/not/existing/" + scala.util.Random.nextString(4)
   }
 
-  final protected def getPMMLSource(path: String): String = {
+  final protected def getPMMLSource(path: String): String =
     getClass.getResource(path).getPath
-  }
 
   final protected def getPMMLResource(path: String): PMML = {
     val source = scala.io.Source.fromURL(getClass.getResource(path)).reader()
