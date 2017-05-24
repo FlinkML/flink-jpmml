@@ -42,30 +42,13 @@ object Dependencies {
     )
   }
 
-  object Java {
-
-    lazy val libraries = Seq(
-      flink.core % Provided,
-      flink.streaming % Provided,
-      flink.clients % Provided,
-      flink.ml,
-      jpmml.evaluator,
-      // Test utils
-      asm.assembly % Test,
-      flink.utils % Test,
-      hadoop.common % "test" classifier "tests",
-      hadoop.hdfs % "test" classifier "tests",
-      hadoop.mincluster % "test",
-      junitinterface.interface % Test
-    )
-  }
-
   object Examples {
 
     lazy val libraries = Seq(
       flink.scalaCore % Provided,
       flink.streaming % Provided
     )
+
   }
 
   private object flink {
