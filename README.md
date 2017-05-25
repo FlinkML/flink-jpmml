@@ -15,22 +15,32 @@ In order to getting started, you only need
 ([repo](https://github.com/apache/flink)) should work properly.
 
 ## Adding `flink-jpmml` dependency
+* if you employ sbt add the following dependecy to your project:
+    * Snapshot: `"io.radicalbit" %% "flink-jpmml-scala" % "0.6.0-SNAPSHOT"`
+    * Stable: `"io.radicalbit" %% "flink-jpmml-scala" % "0.5.0"`
 
-If you employ [sbt](http://www.scala-sbt.org/), then add the following dependency to your project
-```
-"io.radicalbit" %% "flink-jpmml-scala" % "0.5.0"
-```
+* For [maven](https://maven.apache.org/) users instead:
+    * Snapshot
+    ```
+    <dependencies>
+        <dependency>
+            <groupId>io.radicalbit</groupId>
+            <artifactId>flink-jpmml-scala</artifactId>
+            <version>0.6.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+    ```
+    * Stable:
+    ```
+    <dependencies>
+        <dependency>
+            <groupId>io.radicalbit</groupId>
+            <artifactId>flink-jpmml-scala</artifactId>
+            <version>0.5.0</version>
+        </dependency>
+    </dependencies>
+    ```
 
-For [maven](https://maven.apache.org/) users instead
-```
-<dependencies>
-  <dependency>
-    <groupId>io.radicalbit</groupId>
-    <artifactId>flink-jpmml-scala</artifactId>
-    <version>0.5.0</version>
-  </dependency>
-</dependencies>
-```
 
 Eventually, you can publish `flink-jpmml` on your local repository. Then 
 
