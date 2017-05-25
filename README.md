@@ -206,7 +206,7 @@ here. `flink-jpmml` community is looking for you!
 ## Authors
 * **Andrea Spina** - [andrea.spina@radicalbit.io](mailto:andrea.spina@radicalbit.io)
 * **Francesco Frontera** - [francesco.frontera@radicalbit.io](mailto:francesco.frontera@radicalbit.io)
-* **Simone Robutti** - *Initial prototype*
+* **Simone Robutti** - [simone.robutti@gmail.com](mailto:simone.robutti@gmail.com) [@chobeat](https://github.com/chobeat)
 * **Stefano Baghino** - *Initial prototype*
 
 ## Disclaimer 
