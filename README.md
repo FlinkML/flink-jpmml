@@ -1,4 +1,4 @@
-# flink-jpmml #
+# flink-jpmml 
 
 Welcome! `flink-jpmml` is a fresh-made library for **Real-Time** machine learning predictions built on top of 
 [PMML](http://dmg.org/pmml/v4-3/GeneralStructure.html) standard models and [Apache Flink](https://flink.apache.org/) 
@@ -7,13 +7,14 @@ streaming engine.
 `flink-jpmml`is ease to use, running at **serious** scale, backend **independent** and naturally shaped to streaming 
 scenario.
 
-### Prerequisites ###
+## Prerequisites 
+
 In order to getting started, you only need
 * any well-known version of a PMML model (**3.2** or above)
 * flink-jpmml is tested with the latest Flink (i.e. 1.2.1), but any working Apache Flink version 
 ([repo](https://github.com/apache/flink)) should work properly.
 
-### Adding `flink-jpmml` dependency ###
+## Adding `flink-jpmml` dependency
 
 If you employ [sbt](http://www.scala-sbt.org/), then add the following dependency to your project
 ```
@@ -50,7 +51,7 @@ Keep in mind you will need also Flink `scala-core` `flink-streaming` and `flink-
 
 Lets start.
 
-### Getting Started ###
+## Getting Started 
 
 `flink-jpmml` enables Flink users to execute real-time predictions based on machine learning models trained by any 
 system supporting the PMML
@@ -134,8 +135,7 @@ env.execute("flink-jpmml quick predictions")
 These really basic examples show you how to interact with the library. The following sections try to address some 
 interesting details which worth a deeper analysis.
 
-### Behind the scenes ###
-
+## Behind the scenes 
 `flink-jpmml` main effort is to retain all the streaming concepts:
 
 - since Flink is able to run against several **distributed backend**, users need to specify only the PMML source path: 
@@ -160,7 +160,7 @@ a `Score[Double]` ADT, so if the model can't manage a prediction it will return 
  handling a Machine Learning task (a prediction task) along with a pure Streaming application; in this way the user can 
  manage predictions in the body of the function with the primitive event.
 
-### Input Vectors Abstraction ###
+## Input Vectors Abstraction 
 <a name="input-abstraction"></a>
 
 Assume this is the considered PMML feature vector
@@ -185,7 +185,7 @@ size and it will not predict anything (i.e. returns `Score.Empty`); in case of s
 the library reads the sparse size value.
 
 
-### How `flink-jpmml` handles prediction issues ###
+## How `flink-jpmml` handles prediction issues 
 
 `flink-jpmml` won't break your job if something goes wrong but the model loading step; it is such a crucial
 action (it's mandatory for predictions), then in case of failure it raises a `ModelLoadingException`. 
@@ -198,12 +198,12 @@ too short)
 - _Evaluation step failure_ - JPMML fails to evaluate the input against the PMML
 - _JPMML Result Extraction failure_ - The job fails to retrieve the result from the PMML model
 
-### How to Contribute ###
+## How to Contribute 
 
 If you want to contribute to the project send an email to [info@radicalbit.io](info@radicalbit.io) or just open an issue
 here. `flink-jpmml` community is looking for you!
 
-### Disclaimer ###
+## Disclaimer 
 
 * Apache®, Apache Flink™, Flink™, and the Apache feather logo are trademarks of 
 [The Apache Software Foundation](http://apache.org/).
@@ -211,12 +211,18 @@ here. `flink-jpmml` community is looking for you!
 * JPMML-Evaluator is licensed under the GNU Affero General Public License (AGPL) version 3.0. 
 Other licenses are available on request.
 
+## License
+
+<p>This library has been published under the GNU Affero General Public License (AGPL) version 3.0 following and respecting [the official 
+advices coming from the Apache Software Foundation](https://www.apache.org/licenses/GPL-compatibility.html) about the compatibility between 
+the Apache License, Version 2.0 and the GNU General Public License, Version 3.0</p>
+
 -----
 
-<sub>THIS STANDARD IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR 
+<SUB>THIS STANDARD IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR 
 IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A 
 PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
 INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
 PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED 
 AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
-ARISING IN ANY WAY OUT OF THE USE OF THIS RELEASE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. </sub>
+ARISING IN ANY WAY OUT OF THE USE OF THIS RELEASE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</SUB>
