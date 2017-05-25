@@ -203,6 +203,12 @@ too short)
 If you want to contribute to the project send an email to [info@radicalbit.io](info@radicalbit.io) or just open an issue
 here. `flink-jpmml` community is looking for you!
 
+## Authors
+* **Andrea Spina** - [andrea.spina@radicalbit.io](mailto:andrea.spina@radicalbit.io)
+* **Francesco Frontera** - [francesco.frontera@radicalbit.io](mailto:francesco.frontera@radicalbit.io)
+* **Simone Robutti** - *Initial prototype*
+* **Stefano Baghino** - *Initial prototype*
+
 ## Disclaimer 
 
 * Apache®, Apache Flink™, Flink™, and the Apache feather logo are trademarks of 
