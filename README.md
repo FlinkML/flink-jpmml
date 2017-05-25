@@ -219,9 +219,9 @@ Other licenses are available on request.
 
 ## License
 
-<p>This library has been published under the GNU Affero General Public License (AGPL) version 3.0 following and respecting [the official 
+This library has been published under the GNU Affero General Public License (AGPL) version 3.0 following and respecting [the official 
 advices coming from the Apache Software Foundation](https://www.apache.org/licenses/GPL-compatibility.html) about the compatibility between 
-the Apache License, Version 2.0 and the GNU General Public License, Version 3.0</p>
+the Apache License, Version 2.0 and the GNU General Public License, Version 3.0
 
 -----
 
