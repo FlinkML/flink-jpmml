@@ -29,7 +29,7 @@ lazy val root = project
   .enablePlugins(ScalaUnidocPlugin)
   .settings(
     name := "flink-jpmml",
-    crossScalaVersions := Seq("2.10.6", "2.11.8"),
+    crossScalaVersions := Seq("2.10.6", "2.11.11"),
     publish := {},
     publishLocal := {},
     unidocProjectFilter in (ScalaUnidoc, unidoc) := inAnyProject -- inProjects(`flink-jpmml-examples`,
