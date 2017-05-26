@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/radicalbit/flink-jpmml.png)](https://travis-ci.org/radicalbit/flink-jpmml)
+
 # flink-jpmml 
 
 Welcome! `flink-jpmml` is a fresh-made library for **Real-Time** machine learning predictions built on top of 
