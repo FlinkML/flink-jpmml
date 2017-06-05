@@ -13,7 +13,7 @@ scenario.
 
 In order to getting started, you only need
 * any well-known version of a PMML model (**3.2** or above)
-* flink-jpmml is tested with the latest Flink (i.e. 1.2.1), but any working Apache Flink version 
+* flink-jpmml is tested with the latest Flink (i.e. 1.3.0), but any working Apache Flink version 
 ([repo](https://github.com/apache/flink)) should work properly.
 
 ## Adding `flink-jpmml` dependency
