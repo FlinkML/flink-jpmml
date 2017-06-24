@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/radicalbit/flink-jpmml.png)](https://travis-ci.org/radicalbit/flink-jpmml)
+[![Build Status](https://travis-ci.org/FlinkML/flink-jpmml.png)](https://travis-ci.org/FlinkML/flink-jpmml)
 
 # flink-jpmml 
 
