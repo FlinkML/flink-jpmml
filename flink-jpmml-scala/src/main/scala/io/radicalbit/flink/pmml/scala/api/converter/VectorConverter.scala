@@ -36,18 +36,35 @@ private[api] object VectorConverter {
 
   private def apply[A: VectorConverter] = implicitly[VectorConverter[A]]
 
+  /**
+    * Create an instance for specific [[VectorConverter]]
+    *
+    * @param serialize The function producing a [[PmmlInput]]
+    * @return The vector converter instace
+    *
+    * */
   private def createConverter[IN](serialize: (IN, Evaluator) => PmmlInput): VectorConverter[IN] =
     new VectorConverter[IN] {
       override def serializeVector(v: IN, eval: Evaluator): PmmlInput =
         serialize(v, eval)
     }
 
+  /** Type class pattern entry-point: it deliveries right converter depending
+    * on the input type (i.e. Dense or Sparse)
+    *
+    * @return The specific converter instance for type [[Vector]]
+    *
+    */
   private[api] implicit val vectorConversion: VectorConverter[Vector] =
     createConverter {
       case (vec: DenseVector, evaluator) => denseVector2Map.serializeVector(vec, evaluator)
       case (vec: SparseVector, evaluator) => sparseVector2Map.serializeVector(vec, evaluator)
     }
 
+  /** Converts a [[DenseVector]] to the internal type by mapping PMML model fields to vector values.
+    *
+    * @return The converted instance
+    */
   private[api] implicit val denseVector2Map: VectorConverter[DenseVector] =
     createConverter { (vec, evaluator) =>
       getKeyFromModel(evaluator)
@@ -55,6 +72,11 @@ private[api] object VectorConverter {
         .toMap
     }
 
+  /** Converts a [[SparseVector]] to the internal type by mapping PMML model fields to vector values.
+    * Note that only existing values will be mapped
+    *
+    * @return The converted instance
+    */
   private[api] implicit val sparseVector2Map: VectorConverter[SparseVector] =
     createConverter { (vec, evaluator) =>
       getKeyFromModel(evaluator)
@@ -75,9 +97,10 @@ private[api] object VectorConverter {
   private def getKeyFromModel(evaluator: Evaluator) =
     evaluator.getActiveFields.map(_.getName.getValue)
 
-  private def toDenseData(sparseVector: SparseVector): Seq[Option[Any]] =
-    (0 to sparseVector.size).map { index =>
-      if (sparseVector.indices.contains(index)) Some(sparseVector(index)) else None
+  def toDenseData(sparseVector: SparseVector): Seq[Option[Any]] =
+    (0 until sparseVector.size).collect {
+      case index if (sparseVector.indices.contains(index)) => Some(sparseVector(index))
+      case _ => None
     }
 
 }
