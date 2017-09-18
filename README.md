@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/radicalbit/flink-jpmml.png)](https://travis-ci.org/radicalbit/flink-jpmml)
+[![Build Status](https://travis-ci.org/FlinkML/flink-jpmml.png)](https://travis-ci.org/FlinkML/flink-jpmml)
 
 # flink-jpmml 
 
@@ -13,7 +13,7 @@ scenario.
 
 In order to getting started, you only need
 * any well-known version of a PMML model (**3.2** or above)
-* flink-jpmml is tested with the latest Flink (i.e. 1.3.0), but any working Apache Flink version 
+* flink-jpmml is tested with the latest Flink (i.e. 1.3.1), but any working Apache Flink version 
 ([repo](https://github.com/apache/flink)) should work properly.
 
 ## Adding `flink-jpmml` dependency
@@ -125,7 +125,7 @@ object FlinkJpmmlExample {
 Some useful insights from the code:
 - in order to load the PMML model, you need to specify only the PMML source path
 - `ModelReader` is a lazy reader and it provides the right reading abstraction to TaskManagers
-- The resulting `PMMLModel` will be **loaded once** for each TaskManager running on your architecture at 
+- The resulting `PMMLModel` will be **loaded by once** factory for each TaskManager running on your architecture at 
 _construction time_
 - the `PmmlModel.predict` method expects Flink Vectors as input event and, if you want to manage NaNs, an optional 
 replace value;
@@ -155,9 +155,9 @@ the library will take care how to load the model in full compliance of the under
 (e.g. HDFS, Alluxio)
 - `ModelReader` is the object implementing the previous behavior; it will provide the loading methods but will read it 
 _lazily_, _i.e._ only when the transformation will be applied
-- The `PMMLModel` will be loaded once for each TaskManager running on your architecture; that means if you have an
-active TaskManager _A_ made up of 4 TaskSlots, your TM will load **one and only one** shared copy of the model; this is 
-crucial in order to let the system scale (still simple PMML models can grow to several hundreds of MegaBytes 
+- The `PMMLModel` will be loaded by a singleton model factory for each TaskManager running on your architecture; that means if you have an
+active TaskManager _A_ made up of 4 TaskSlots, your TM will load the model from a single loader entity; this is 
+crucial in order to let the system scale in thread-safety (still simple PMML models can grow to several hundreds of MegaBytes 
 proportionally to the model size, meaning a big load in memory terms)
 - the `PmmlModel.predict` method expects Flink Vectors as input events; this choice let us to leverage the underlying 
 Breeze implementation and **no reflection** will be applied at all; moreover, the user don't have to specify any 
@@ -218,7 +218,7 @@ here. `flink-jpmml` community is looking for you!
 ## Authors
 * **Andrea Spina** - [andrea.spina@radicalbit.io](mailto:andrea.spina@radicalbit.io) [@spi-x-i](https://github.com/spi-x-i)
 * **Francesco Frontera** - [francesco.frontera@radicalbit.io](mailto:francesco.frontera@radicalbit.io) [@francescofrontera](https://github.com/francescofrontera)
-* **Simone Robutti** - [simone.robutti@gmail.com](mailto:simone.robutti@gmail.com) [@chobeat](https://github.com/chobeat)
+* **Simone Robutti** - *Initial prototype* [simone.robutti@gmail.com](mailto:simone.robutti@gmail.com) [@chobeat](https://github.com/chobeat)
 * **Stefano Baghino** - *Initial prototype* [@stefanobaghino](https://github.com/stefanobaghino)
 
 ## Disclaimer 
