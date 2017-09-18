@@ -27,8 +27,6 @@ import scala.collection.JavaConversions._
 /** Type Class Pattern implementing converters from Flink [[org.apache.flink.ml.math.Vector]] instances to
   * internal types; the existing fields (i.e. value defined fields) are modeled as [[scala.collection.mutable.Map]]s; the
   * not existing fields (i.e. NaN values) will not be mapped within the Internal type
-  *
-  *
   */
 sealed trait VectorConverter[-T] extends Serializable {
   def serializeVector(v: T, eval: Evaluator): Map[String, Any]
@@ -44,11 +42,6 @@ private[api] object VectorConverter {
         serialize(v, eval)
     }
 
-//  private[api] implicit def vectorConversion[A : VectorConverter]: VectorConverter[A] =
-//    createConverter { (vectorIstance, evaluator ) =>
-//        implicitly[VectorConverter[A]].serializeVector(vectorIstance, evaluator)
-//    }
-
   private[api] implicit val vectorConversion: VectorConverter[Vector] =
     createConverter {
       case (vec: DenseVector, evaluator) => denseVector2Map.serializeVector(vec, evaluator)
@@ -57,12 +50,17 @@ private[api] object VectorConverter {
 
   private[api] implicit val denseVector2Map: VectorConverter[DenseVector] =
     createConverter { (vec, evaluator) =>
-      getKeyFromModel(evaluator).zip(vec.data).toMap
+      getKeyFromModel(evaluator)
+        .zip(vec.data)
+        .toMap
     }
 
   private[api] implicit val sparseVector2Map: VectorConverter[SparseVector] =
     createConverter { (vec, evaluator) =>
-      getKeyFromModel(evaluator).zip(toDenseData(vec)).collect { case (key, Some(value)) => (key, value) }.toMap
+      getKeyFromModel(evaluator)
+        .zip(toDenseData(vec))
+        .collect { case (key, Some(value)) => (key, value) }
+        .toMap
     }
 
   private[api] implicit def applyConversion[T: VectorConverter, E <: Evaluator](dataVector: T, evaluator: E) =
