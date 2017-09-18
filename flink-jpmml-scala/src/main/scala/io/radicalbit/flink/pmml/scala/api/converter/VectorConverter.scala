@@ -49,7 +49,7 @@ private[api] object VectorConverter {
         serialize(v, eval)
     }
 
-  /** Type class pattern entry-point: it deliveries right converter depending
+  /** Type class pattern entry-point: it delivers right converter depending
     * on the input type (i.e. Dense or Sparse)
     *
     * @return The specific converter instance for type [[Vector]]
