@@ -40,7 +40,7 @@ private[api] object VectorConverter {
     * Create an instance for specific [[VectorConverter]]
     *
     * @param serialize The function producing a [[PmmlInput]]
-    * @return The vector converter instace
+    * @return The vector converter instance
     *
     * */
   private def createConverter[IN](serialize: (IN, Evaluator) => PmmlInput): VectorConverter[IN] =
@@ -49,7 +49,7 @@ private[api] object VectorConverter {
         serialize(v, eval)
     }
 
-  /** Type class pattern entry-point: it deliveries right converter depending
+  /** Type class pattern entry-point: it deliveries right converters depending
     * on the input type (i.e. Dense or Sparse)
     *
     * @return The specific converter instance for type [[Vector]]
@@ -97,7 +97,7 @@ private[api] object VectorConverter {
   private def getKeyFromModel(evaluator: Evaluator) =
     evaluator.getActiveFields.map(_.getName.getValue)
 
-  def toDenseData(sparseVector: SparseVector): Seq[Option[Any]] =
+  private def toDenseData(sparseVector: SparseVector): Seq[Option[Any]] =
     (0 until sparseVector.size).collect {
       case index if (sparseVector.indices.contains(index)) => Some(sparseVector(index))
       case _ => None
