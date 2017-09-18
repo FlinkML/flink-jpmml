@@ -49,7 +49,7 @@ private[api] object VectorConverter {
         serialize(v, eval)
     }
 
-  /** Type class pattern entry-point: it deliveries right converters depending
+  /** Type class pattern entry-point: it deliveries right converter depending
     * on the input type (i.e. Dense or Sparse)
     *
     * @return The specific converter instance for type [[Vector]]
@@ -98,9 +98,8 @@ private[api] object VectorConverter {
     evaluator.getActiveFields.map(_.getName.getValue)
 
   private def toDenseData(sparseVector: SparseVector): Seq[Option[Any]] =
-    (0 until sparseVector.size).collect {
-      case index if (sparseVector.indices.contains(index)) => Some(sparseVector(index))
-      case _ => None
+    (0 until sparseVector.size).map { index =>
+      if (sparseVector.indices.contains(index)) Some(sparseVector(index)) else None
     }
 
 }
