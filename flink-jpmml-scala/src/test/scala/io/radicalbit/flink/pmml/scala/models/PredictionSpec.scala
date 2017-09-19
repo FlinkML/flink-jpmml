@@ -19,7 +19,7 @@
 
 package io.radicalbit.flink.pmml.scala.models
 
-import io.radicalbit.flink.pmml.scala.{InputPreparationException, InputValidationException, JPMMLExtractionException}
+import io.radicalbit.flink.pmml.scala.api.exceptions._
 import org.jpmml.evaluator.EvaluationException
 import org.scalatest.{Matchers, WordSpec}
 

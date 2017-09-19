@@ -19,12 +19,12 @@
 
 package io.radicalbit.flink.pmml.scala.models
 
-import io.radicalbit.flink.pmml.scala.{InputPreparationException, InputValidationException, JPMMLExtractionException}
+import io.radicalbit.flink.pmml.scala.api.exceptions._
 import io.radicalbit.flink.pmml.scala.logging.LazyLogging
 import org.jpmml.evaluator.EvaluationException
 
-import scala.util.{Failure, Success, Try}
 import scala.util.control.NonFatal
+import scala.util.{Failure, Success, Try}
 
 /** Factory for [[Prediction]] case class instances */
 object Prediction extends LazyLogging {

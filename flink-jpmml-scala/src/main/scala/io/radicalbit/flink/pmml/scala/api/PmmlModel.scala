@@ -22,7 +22,7 @@ package io.radicalbit.flink.pmml.scala.api
 import java.io.StringReader
 import java.util
 
-import io.radicalbit.flink.pmml.scala.{InputValidationException, JPMMLExtractionException}
+import io.radicalbit.flink.pmml.scala.api.exceptions.{InputValidationException, JPMMLExtractionException}
 import io.radicalbit.flink.pmml.scala.api.pipeline.Pipeline
 import io.radicalbit.flink.pmml.scala.api.reader.ModelReader
 import io.radicalbit.flink.pmml.scala.models._
