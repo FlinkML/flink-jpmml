@@ -23,29 +23,28 @@ import io.radicalbit.flink.pmml.scala.api.exceptions.EmptyEvaluatorException
 import org.dmg.pmml.Model
 import org.jpmml.evaluator.ModelEvaluator
 
-/** Represent the Evaluator of a PmmlModel;
-  * If the evaluator exists, it returns a [[PmmlEvaluator]]
-  * [[EmptyEvaluator]] otherwise.
+/**
+  * Represent the Evaluator of a PmmlModel
   */
 object Evaluator {
 
-  /** Factory method
+  /** If the evaluator exists, it returns a [[PmmlEvaluator]], [[EmptyEvaluator]] otherwise.
     *
-    * @param evaluator
-    * @return
+    * @param evaluator An instance of [[ModelEvaluator]]
+    * @return An instance of [[Evaluator]]
     */
   def apply(evaluator: ModelEvaluator[_ <: Model]): Evaluator = PmmlEvaluator(evaluator)
 
   /** Returns an empty instance of [[Evaluator]]
     *
-    * @return
+    * @return An [[EmptyEvaluator]]
     */
   def empty: Evaluator = EmptyEvaluator
 
 }
 
-/** ADT sealed trait providing getters for ModelEvaluator.
-  *
+/**
+  * ADT sealed trait providing getters for ModelEvaluator
   */
 sealed trait Evaluator {
 
@@ -53,8 +52,8 @@ sealed trait Evaluator {
 
   /** Returns [[ModelEvaluator]]] if evaluator has value, default value otherwise
     *
-    * @param default
-    * @return
+    * @param default the defined default value
+    * @return the current evaluator if it has value, default otherwise
     */
   def getOrElse(default: => ModelEvaluator[_ <: Model]) =
     this match {
@@ -64,8 +63,8 @@ sealed trait Evaluator {
 
 }
 
-/** Represents the Evaluator if it is not present
-  *
+/**
+  * Represents the Evaluator if it is not present
   */
 case object EmptyEvaluator extends Evaluator {
 
@@ -77,15 +76,15 @@ case object EmptyEvaluator extends Evaluator {
 
 }
 
-/** Represents the Evaluator if it is present
-  *
-  * @param modelEval
+/**
+  * Represents the Evaluator if it is present
+  * @param modelEval the evaluator for the Pmml Model
   */
 final case class PmmlEvaluator(modelEval: ModelEvaluator[_ <: Model]) extends Evaluator {
 
-  /** Returns the [[PmmlEvaluator]] value
-    *
-    * @return
+  /**
+    * Retrieving the evaluator of the JpmmlEvaluator
+    * @return the [[ModelEvaluator]]
     */
   override def model: ModelEvaluator[_ <: Model] = modelEval
 

@@ -19,6 +19,7 @@
 
 package io.radicalbit.flink.pmml.scala.api.converter
 
+import io.radicalbit.flink.pmml.scala.api.Evaluator
 import io.radicalbit.flink.pmml.scala.utils.{PmmlEvaluatorKit, PmmlLoaderKit}
 import org.apache.flink.ml.math.{DenseVector, SparseVector, Vector}
 import org.dmg.pmml.Model
@@ -33,10 +34,10 @@ class VectorConverterSpec extends WordSpec with Matchers with PmmlEvaluatorKit w
 
   private val evaluator = buildEvaluator(getPMMLResource(Source.KmeansPmml))
 
-  private val modelKeys: Seq[String] = evaluator.getActiveFields.map(_.getName.getValue)
+  private val modelKeys: Seq[String] = evaluator.model.getActiveFields.map(_.getName.getValue)
 
-  private def implicitTestConverter(input: Vector, evaluator: ModelEvaluator[_ <: Model])(
-      implicit f: (Vector, ModelEvaluator[_ <: Model]) => Map[String, Any]) = f(input, evaluator)
+  private def implicitTestConverter(input: Vector, evaluator: Evaluator)(
+      implicit f: (Vector, Evaluator) => Map[String, Any]) = f(input, evaluator)
 
   "VectorConverter" should {
 
