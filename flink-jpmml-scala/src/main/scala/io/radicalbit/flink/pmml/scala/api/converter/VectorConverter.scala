@@ -95,7 +95,7 @@ private[api] object VectorConverter {
     *
     */
   private def getKeyFromModel(evaluator: Evaluator) =
-    evaluator.getActiveFields.map(_.getName.getValue)
+    evaluator.model.getActiveFields.map(_.getName.getValue)
 
   private def toDenseData(sparseVector: SparseVector): Seq[Option[Any]] =
     (0 until sparseVector.size).map { index =>

@@ -17,19 +17,14 @@
  * along with flink-JPMML.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package io.radicalbit.flink.pmml.scala
+package io.radicalbit.flink.pmml.scala.api
 
-import org.dmg.pmml.Model
-import org.jpmml.evaluator.ModelEvaluator
+package object exceptions {
 
-/** Provides features implementation.
-  *
-  * The `api` package object contains inner types definition.
-  *
-  * [[io.radicalbit.flink.pmml.scala.api.PmmlInput]] represents internal input type
-  */
-package object api {
-
-  type PmmlInput = Map[String, Any]
+  /** Prediction failure due to [[io.radicalbit.flink.pmml.scala.api.EmptyEvaluator]]
+    *
+    * @param msg
+    */
+  private[scala] class EmptyEvaluatorException(msg: String) extends NoSuchElementException(msg)
 
 }

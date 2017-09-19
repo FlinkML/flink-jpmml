@@ -59,7 +59,7 @@ private[api] trait Pipeline { self: PmmlModel =>
     * @return extracted output
     */
   private[api] def extractTargetFields(evaluationResult: java.util.Map[FieldName, _]): Seq[(String, Any)] =
-    extractFields(evaluator.getTargetFields, evaluationResult, evaluator)
+    extractFields(evaluator.model.getTargetFields, evaluationResult, evaluator)
 
   /** Extracts all the output fields specified by the PMML document.
     *
@@ -67,7 +67,7 @@ private[api] trait Pipeline { self: PmmlModel =>
     * @return extracted output
     */
   private[api] def extractOutputFields(evaluationResult: java.util.Map[FieldName, _]): Seq[(String, Any)] =
-    extractFields(evaluator.getOutputFields, evaluationResult, evaluator)
+    extractFields(evaluator.model.getOutputFields, evaluationResult, evaluator)
 
   /** Calls [[EvaluatorUtil.decode]] for each field demanded for extraction.
     *
