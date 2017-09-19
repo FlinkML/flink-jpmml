@@ -60,9 +60,9 @@ object PmmlModel {
   private def fromFilteredSource(PMMLPath: String) =
     JAXBUtil.createFilteredSource(new InputSource(new StringReader(PMMLPath)), new ImportFilter())
 
-  /** It provides a new instance of the [[PmmlModel]] with Empty Evaluator
+  /** It provides a new instance of the [[PmmlModel]] with [[EmptyEvaluator]]
     *
-    * @return
+    * @return [[PmmlModel]] with [[EmptyEvaluator]]
     */
   private[api] def empty = new PmmlModel(Evaluator.empty)
 
