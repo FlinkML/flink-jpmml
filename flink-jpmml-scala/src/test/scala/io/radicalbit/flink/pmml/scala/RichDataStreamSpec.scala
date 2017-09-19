@@ -19,37 +19,20 @@
 
 package io.radicalbit.flink.pmml.scala
 
-import io.radicalbit.flink.pmml.scala.RichDataStreamSpec.Input
 import io.radicalbit.flink.pmml.scala.api.PmmlModel
 import io.radicalbit.flink.pmml.scala.api.reader.ModelReader
-import io.radicalbit.flink.pmml.scala.models.{Prediction, Score, Target}
+import io.radicalbit.flink.pmml.scala.models.prediction.{Prediction, Score, Target}
+import io.radicalbit.flink.pmml.scala.utils.models.{BaseInput, Input}
 import io.radicalbit.flink.pmml.scala.utils.{FlinkPipelineTestKit, FlinkTestKitCompanion, PmmlLoaderKit}
 import org.apache.flink.api.scala.ClosureCleaner
-import org.apache.flink.ml.math.{DenseVector, SparseVector}
 import org.apache.flink.runtime.client.JobExecutionException
 import org.apache.flink.streaming.api.scala._
 
 object RichDataStreamSpec extends FlinkTestKitCompanion[Prediction] {
 
-  object Input {
-    def apply(rawValues: Double*): Input = Input(values = rawValues.toList)
-  }
-  case class Input(values: List[Double]) {
-    def size: Int = values.size
-  }
-
   private val defaultDenseEvalFunction = { (in: Input, model: PmmlModel) =>
-    model.predict(toDenseVector(in), None)
+    model.predict(BaseInput.toDenseVector(in), None)
   }
-  private val defaultSparseEvalFunction = { (in: Input, model: PmmlModel) =>
-    model.predict(toSparseVector(in, 4), None)
-  }
-
-  private def toDenseVector(input: Input): DenseVector =
-    DenseVector(input.values.toArray)
-
-  private def toSparseVector(input: Input, size: Int): SparseVector =
-    SparseVector(size, Array.range(0, input.size - 1), input.values.toArray)
 
 }
 
@@ -99,7 +82,7 @@ class RichDataStreamSpec extends FlinkPipelineTestKit[Input, Prediction] with Pm
 
     "Emit empty prediction if the input is not valid" in {
       val evalFunction = { (in: Input, model: PmmlModel) =>
-        model.predict(toSparseVector(in, 2), None)
+        model.predict(BaseInput.toSparseVector(in, 2), None)
       }
       run(Seq(Input(1.0, 3.0)), Seq(emptyPrediction), RichDataStreamSpec)(pipelineBuilder(None)(evalFunction))
     }

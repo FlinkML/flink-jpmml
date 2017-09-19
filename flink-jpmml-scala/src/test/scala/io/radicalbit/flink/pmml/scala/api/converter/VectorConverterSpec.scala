@@ -22,8 +22,6 @@ package io.radicalbit.flink.pmml.scala.api.converter
 import io.radicalbit.flink.pmml.scala.api.Evaluator
 import io.radicalbit.flink.pmml.scala.utils.{PmmlEvaluatorKit, PmmlLoaderKit}
 import org.apache.flink.ml.math.{DenseVector, SparseVector, Vector}
-import org.dmg.pmml.Model
-import org.jpmml.evaluator.ModelEvaluator
 import org.scalatest.{Matchers, WordSpec}
 
 import scala.collection.JavaConversions._
