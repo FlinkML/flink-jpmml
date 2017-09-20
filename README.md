@@ -126,10 +126,11 @@ val predictions =
 The features of flink-jpmml PMML models are better discussed [here](#single-model): you will find several ways to
 handle your predictions. We kept alsocthe single operator model explained later if you want to bind a specific model to
 an operator instance.
+
 ### What happens internally
 
 ![flink-jpmml-architecture]
-(https://github.com/FlinkML/flink-jpmml/tree/master/flink-jpmml-assets/src/main/resources/architecture.png)
+(flink-jpmml/flink-jpmml-assets/src/main/resources/architecture.png)
 
 When an event **A** comes, it declares by its `modelId` which is the model it needs to be evaluated against.
 If the model has not been uploaded within the operator yet, the latter will exploit the **metadata** information
