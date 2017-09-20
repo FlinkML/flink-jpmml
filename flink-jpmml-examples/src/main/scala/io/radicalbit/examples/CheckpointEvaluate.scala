@@ -21,6 +21,7 @@ package io.radicalbit.examples
 
 import io.radicalbit.examples.model.Utils
 import io.radicalbit.examples.models.Iris
+import io.radicalbit.examples.util.DynamicParams
 import io.radicalbit.flink.pmml.scala.api.PmmlModel
 import io.radicalbit.flink.pmml.scala.models.control.AddMessage
 import io.radicalbit.flink.pmml.scala.models.core.ModelId
@@ -46,8 +47,12 @@ object CheckpointEvaluate {
 
     val env = StreamExecutionEnvironment.getExecutionEnvironment
 
-    env.enableCheckpointing(1000, CheckpointingMode.EXACTLY_ONCE)
+    val parameters = DynamicParams.fromParameterTool(parameterTool)
 
+    //Enable checkpoint to keep control stream
+    env.enableCheckpointing(parameters.ckpInterval, CheckpointingMode.EXACTLY_ONCE)
+
+    //Create source for Iris data
     val eventStream = env.addSource((sc: SourceContext[Iris]) => {
       val NumberOfParameters = 4
       lazy val RandomGenerator = scala.util.Random
@@ -71,10 +76,15 @@ object CheckpointEvaluate {
       }
     })
 
+    //Create a stream for socket
     val controlStream = env
       .socketTextStream("localhost", 9999)
       .map(path => AddMessage(idSet.toVector(Random.nextInt(idSet.size)), 1L, path, Utils.now()))
 
+    /*
+    * Make a prediction withSupportStream that represents the stream from the socket
+    * evaluate the model with model upload in ControlStream
+    * */
     val predictions = eventStream
       .withSupportStream(controlStream)
       .evaluate { (event: Iris, model: PmmlModel) =>
@@ -85,7 +95,6 @@ object CheckpointEvaluate {
 
     predictions
       .writeAsText(outputPath, WriteMode.OVERWRITE)
-      .setParallelism(2)
 
     env.execute("Checkpoint Evaluate Example")
   }
