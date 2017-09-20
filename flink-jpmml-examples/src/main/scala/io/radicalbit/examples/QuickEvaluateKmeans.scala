@@ -19,12 +19,12 @@
 
 package io.radicalbit.examples
 
-import org.apache.flink.streaming.api.scala._
-import io.radicalbit.examples.model.IrisSource._
+import io.radicalbit.examples.sources.IrisSource._
 import io.radicalbit.examples.util.EnsureParameters
 import io.radicalbit.flink.pmml.scala._
 import io.radicalbit.flink.pmml.scala.api.reader.ModelReader
 import org.apache.flink.api.java.utils.ParameterTool
+import org.apache.flink.streaming.api.scala._
 
 object QuickEvaluateKmeans extends EnsureParameters {
 
@@ -36,7 +36,7 @@ object QuickEvaluateKmeans extends EnsureParameters {
     val (inputModel, output) = ensureParams(params)
 
     //Read data from custom iris source
-    val irisDataStream = irisSource(env)
+    val irisDataStream = irisSource(env, None)
 
     //Convert iris to DenseVector
     val irisToVector = irisDataStream.map(_.toVector)
