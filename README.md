@@ -130,7 +130,7 @@ an operator instance.
 ### What happens internally
 
 ![flink-jpmml-architecture]
-(flink-jpmml/flink-jpmml-assets/src/main/resources/architecture.png)
+(https://github.com/spi-x-i/flink-jpmml/blob/feature/%2329-update-README-to-0.6.0/flink-jpmml-assets/src/main/resources/architecture.png)
 
 When an event **A** comes, it declares by its `modelId` which is the model it needs to be evaluated against.
 If the model has not been uploaded within the operator yet, the latter will exploit the **metadata** information
