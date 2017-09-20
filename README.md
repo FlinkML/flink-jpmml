@@ -79,7 +79,7 @@ First of all, we indentify univocally models by the `ModelId` abstraction, made 
 and a *version*. 
 
 > **e.g.** Suppose you have two _ensemble_ models A and B (PMML based) where A has a depth level 10 on width 
-100 and B depth 5 on width 200, and you desire to have a comparison between them, so likely your can identify 
+100 and B depth 5 on width 200, and you desire to have a comparison between them, so likely you can identify 
 `applicationName` SVM and `versions` A and B.
 
 `flink-jpmml` does not store models within its operator state, but related metadata information.
@@ -96,7 +96,7 @@ By now, the user can define the following two messages:
     - `AddMessage` it requires an `applicationName` Java UUID formatted, a `version`, the model source
     `path` and a timestamp
     - `DelMessage` it requires an `applicationName` Java UUID formatted, a `version` and a timestamp
-- `DataStream[BaseEvent]` your input stream should extend the `BaseEvent` trait and defining the string `modelId
+- `DataStream[BaseEvent]` your input stream should extend the `BaseEvent` trait and defining the string `modelId`
  formatted as `"<modelApplication>_<modelVersion>"` and a timestamp.
 
 ### The syntax
