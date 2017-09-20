@@ -2,7 +2,7 @@
 
 # flink-jpmml 
 
-Welcome! `flink-jpmml` is a fresh-made library for **real time** machine learning predictions built on top of 
+Welcome! `flink-jpmml` is a fresh-made library for dynamic **real time** machine learning predictions built on top of 
 [PMML](http://dmg.org/pmml/v4-3/GeneralStructure.html) standard models and [Apache Flink](https://flink.apache.org/) 
 streaming engine.
 
@@ -69,16 +69,16 @@ Lets start.
 system supporting the PMML
 standard; this allows efficient streaming model serving along with the **powerful** Flink engine features.
 
-Lets start with a concrete example.
-
 ### Dynamic Models Evaluation
 
-Since `0.6.0` this project supports dynamic streaming model serving efficiently. For more information 
+Since `0.6.0` the project supports dynamic streaming model serving efficiently. For more information 
 we suggest to watch the [related talk](https://www.youtube.com/watch?v=0rWvMZ6JSD8&t=7s) 
 presented at last Flink Forward 2017 in Berlin.
 
-First of all, we indentify univocally models by the `ModelId` abstraction, made of an *ApplicationName*
-and a *version*. e.g. Suppose you have two Ensemble models A and B (PMML based) where A has a depth level 10 on width 
+First of all, we indentify univocally models by the `ModelId` abstraction, made of an *applicationName*
+and a *version*. 
+
+> **e.g.** Suppose you have two _ensemble_ models A and B (PMML based) where A has a depth level 10 on width 
 100 and B depth 5 on width 200, and you desire to have a comparison between them, so likely your can identify 
 `ApplicationName` SVM and `versions` A and B.
 
@@ -124,8 +124,10 @@ val predictions =
 ```
 
 The features of flink-jpmml PMML models are better discussed [here](#single-model): you will find several ways to
-handle your predictions. We kept alsocthe single operator model explained later if you want to bind a specific model to
-an operator instance.
+handle your predictions. All the previous concepts about how the model is built within 
+the operator, the operator configuration and so forth have been retained and are well described below. 
+
+We kept also the single operator model explained later if you want to bind a specific model to an operator instance.
 
 ### What happens internally
 
