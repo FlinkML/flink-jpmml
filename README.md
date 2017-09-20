@@ -80,24 +80,24 @@ and a *version*.
 
 > **e.g.** Suppose you have two _ensemble_ models A and B (PMML based) where A has a depth level 10 on width 
 100 and B depth 5 on width 200, and you desire to have a comparison between them, so likely your can identify 
-`ApplicationName` SVM and `versions` A and B.
+`applicationName` SVM and `versions` A and B.
 
-`flink-jpmml` do not store models within its operator state, but related metadata information.
+`flink-jpmml` does not store models within its operator state, but related metadata information.
 The operator is able to retrieve models from your distributed backend exploiting the concept of
-metadata table. Then, your PMML models has to be persisted in a backend system 
+metadata table. Then, your PMML models have to be persisted in a backend system 
 (see [here](#dist-backend) for supported systems).
 
 If you want to use dynamic model evaluation you're going to define the following streams:
 
 - `DataStream[ServingMessage]` this stream is the main user tool to feed the operator with
 necessary model information; here, the user is not demanded to send by stream its PMML models but only the requested 
-descriptive metadata. The user should employ `ServingMessage` ADT in order to feed this stream. By now, the user can define the following two 
-messages:
+descriptive metadata. The user should employ `ServingMessage` ADT in order to feed this stream. 
+By now, the user can define the following two messages:
     - `AddMessage` it requires an `applicationName` Java UUID formatted, a `version`, the model source
     `path` and a timestamp
     - `DelMessage` it requires an `applicationName` Java UUID formatted, a `version` and a timestamp
-- `DataStream[BaseEvent]` your input stream should extend the `BaseEvent` trait and defining the modelId
-as a String formatted as `"<modelApplication>_<modelVersion>"` and a timestamp.
+- `DataStream[BaseEvent]` your input stream should extend the `BaseEvent` trait and defining the string `modelId
+ formatted as `"<modelApplication>_<modelVersion>"` and a timestamp.
 
 ### The syntax
 
@@ -108,6 +108,8 @@ import io.radicalbit.flink.pmml.scala._
 import org.apache.flink.ml.math.Vector
 import org.apache.flink.streaming.api.scala._
 import io.radicalbit.flink.pmml.scala.models.control.ServingMessage
+
+... 
 
 val inputStream: DataStream[_ <: BaseEvent] = yourInputStream
 val controlStream: DataStream[ServingMessage] = yourControlStream
@@ -139,9 +141,9 @@ to lazily retrieve the targeted model from the underlying distributed backend.
 
 The control stream is the right tool for the user to provide the global picture of the models available to your
 platform (this well fits a **model repository server** concept). **You will use this stream to feed the operator with
-the information useful to your input events in order to let them catch easily the models.**
+the information useful to your input events in order to let them grab easily the models.**
 
-If the events are able to find the model the prediction is computed as a `Prediction` ADT, otherwise
+If the events are able to find the targeted models, the prediction is computed and a `Prediction` (based on ADT) outcome is returned, otherwise
 the outcome will be an `EmptyPrediction`.
 
 ### <a name = "single-model"></a> Single Model Operator
