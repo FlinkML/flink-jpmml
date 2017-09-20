@@ -66,11 +66,6 @@ private[scala] abstract class EvaluationCoFunction[EVENT, CTRL <: ServingMessage
   final protected lazy val servingModels: mutable.WeakHashMap[Int, PmmlModel] =
     mutable.WeakHashMap.empty[Int, PmmlModel]
 
-  override def open(parameters: Configuration): Unit = {
-    super.open(parameters)
-    servingMetadata = immutable.Map.empty[ModelId, ModelInfo]
-  }
-
   override def processElement2(control: CTRL,
                                ctx: CoProcessFunction[EVENT, CTRL, OUT]#Context,
                                out: Collector[OUT]): Unit = {
@@ -85,6 +80,8 @@ private[scala] abstract class EvaluationCoFunction[EVENT, CTRL <: ServingMessage
   }
 
   override def initializeState(context: FunctionInitializationContext): Unit = {
+    servingMetadata = immutable.Map.empty[ModelId, ModelInfo]
+
     val description = new ListStateDescriptor[MetadataCheckpoint](
       "metadata-snapshot",
       TypeInformation.of(new TypeHint[MetadataCheckpoint]() {}))
