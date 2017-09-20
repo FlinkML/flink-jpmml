@@ -25,7 +25,6 @@ import java.util
 import io.radicalbit.flink.pmml.scala.api.exceptions.{InputValidationException, JPMMLExtractionException}
 import io.radicalbit.flink.pmml.scala.api.pipeline.Pipeline
 import io.radicalbit.flink.pmml.scala.api.reader.ModelReader
-import io.radicalbit.flink.pmml.scala.models.{prediction, _}
 import io.radicalbit.flink.pmml.scala.models.prediction.Prediction
 import org.apache.flink.ml.math.Vector
 import org.dmg.pmml.FieldName
@@ -61,9 +60,9 @@ object PmmlModel {
   private def fromFilteredSource(PMMLPath: String) =
     JAXBUtil.createFilteredSource(new InputSource(new StringReader(PMMLPath)), new ImportFilter())
 
-  /** It provides a new instance of the [[PmmlModel]] with Empty Evaluator
+  /** It provides a new instance of the [[PmmlModel]] with [[EmptyEvaluator]]
     *
-    * @return
+    * @return [[PmmlModel]] with [[EmptyEvaluator]]
     */
   private[api] def empty = new PmmlModel(Evaluator.empty)
 
@@ -105,7 +104,7 @@ class PmmlModel(private[api] val evaluator: Evaluator) extends Pipeline {
     * @param inputVector the input event as a [[org.apache.flink.ml.math.Vector]] instance
     * @param replaceNan A [[scala.Option]] describing a replace value for not defined vector values
     * @tparam V subclass of [[org.apache.flink.ml.math.Vector]]
-    * @return [[prediction.Prediction]] instance
+    * @return [[Prediction]] instance
     */
   final def predict[V <: Vector](inputVector: V, replaceNan: Option[Double] = None): Prediction = {
     val result = Try {
