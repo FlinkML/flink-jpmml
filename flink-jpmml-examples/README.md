@@ -27,7 +27,7 @@ Either you can employ the _quick_ predictor:
 
 ## Fault-Tolerance
 
-_if you like testing a fault-tolerance of the operator you can run a `CheckpointEvaluate` example._
+_if you like testing the fault-tolerance behaviour of the operator you can run a `CheckpointEvaluate` example._
 
 In order to do that: 
 
@@ -46,7 +46,7 @@ nc -l -k 9999
 ./path/to/bin/flink run -c io.radicalbit.examples.CheckpointEvaluate <path/to/project/root>/flink-jpmml/flink-jpmml-examples/target/scala-2.x/flink-jpmml-examples-assembly-0.6.0-SNAPSHOT.jar --output /path/to/output
 ```
 
-4) Put the model via socket, in this case you can use the models in `flink-jpmml-assets`:
+4) Send the model via socket, in this case you can use the models in `flink-jpmml-assets`:
 ```
 <path/to/project/root>/flink-jpmml/flink-jpmml-assets/resources/kmeans.xml
 <path/to/project/root>/flink-jpmml/flink-jpmml-assets/resources/kmeans_nooutput.xml
@@ -57,7 +57,7 @@ nc -l -k 9999
 ```
 ./path/to/flink-1.3.2/bin/taskmanager.sh stop
 ```
-_you can show the job's status in Flink UI on http://localhost:8081_
+_you can see the job's status in Flink UI on http://localhost:8081_
 
 
 7) Restart the task manager:
@@ -65,7 +65,7 @@ _you can show the job's status in Flink UI on http://localhost:8081_
 ./path/to/flink-1.3.2/bin/taskmanager.sh start
 ```
 
-_At this point, when the job is restarted, there's no need to reload the models in control stream because you should see the models from the last checkpoint_ 
+_At this point, when the job is restarted, there's no need to re-send the models info by control stream because you should see the models from the last checkpoint_ 
 
 
 

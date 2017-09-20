@@ -82,9 +82,10 @@ object CheckpointEvaluate {
       .map(path => AddMessage(idSet.toVector(Random.nextInt(idSet.size)), 1L, path, Utils.now()))
 
     /*
-    * Make a prediction withSupportStream that represents the stream from the socket
-    * evaluate the model with model upload in ControlStream
-    * */
+     * Make a prediction withSupportStream that represents the stream from the socket
+     * evaluate the model with model upload in ControlStream
+     *
+     * */
     val predictions = eventStream
       .withSupportStream(controlStream)
       .evaluate { (event: Iris, model: PmmlModel) =>
