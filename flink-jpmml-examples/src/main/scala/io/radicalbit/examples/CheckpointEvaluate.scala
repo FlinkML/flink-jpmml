@@ -19,7 +19,6 @@
 
 package io.radicalbit.examples
 
-
 import io.radicalbit.examples.model.Utils
 import io.radicalbit.examples.models.Iris
 import io.radicalbit.flink.pmml.scala.api.PmmlModel

@@ -50,10 +50,10 @@ object ControlSource {
                      mappingIdPath: Map[String, String],
                      maxInterval: Long): DataStream[ServingMessage] =
     mode match {
-      case Loop   => env.addSource(new InfiniteSource(mappingIdPath, Loop, maxInterval))
+      case Loop => env.addSource(new InfiniteSource(mappingIdPath, Loop, maxInterval))
       case Random => env.addSource(new InfiniteSource(mappingIdPath, Random, maxInterval))
       case Finite => env.addSource(new FiniteSource(mappingIdPath, maxInterval))
-      case _      => env.addSource(new InfiniteSource(mappingIdPath, Random, maxInterval))
+      case _ => env.addSource(new InfiniteSource(mappingIdPath, Random, maxInterval))
     }
 
 }

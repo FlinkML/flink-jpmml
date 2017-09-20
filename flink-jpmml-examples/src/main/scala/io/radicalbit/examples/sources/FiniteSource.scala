@@ -19,6 +19,7 @@
 
 package io.radicalbit.examples.sources
 
+import io.radicalbit.examples.model.Utils
 import io.radicalbit.flink.pmml.scala.models.control.{AddMessage, ServingMessage}
 import org.apache.flink.streaming.api.functions.source.SourceFunction
 
