@@ -90,7 +90,7 @@ metadata table. Then, your PMML models has to be persisted in a backend system
 If you want to use dynamic model evaluation you're going to define the following streams:
 
 - `DataStream[ServingMessage]` this stream is the main user tool to feed the operator with
-necessary model information; the user here is not demanded to send by stream its PMML models but only the requested 
+necessary model information; here, the user is not demanded to send by stream its PMML models but only the requested 
 descriptive metadata. The user should employ `ServingMessage` ADT in order to feed this stream. By now, the user can define the following two 
 messages:
     - `AddMessage` it requires an `applicationName` Java UUID formatted, a `version`, the model source
@@ -124,7 +124,7 @@ val predictions =
 ```
 
 The features of flink-jpmml PMML models are better discussed [here](#single-model): you will find several ways to
-handle your predictions. All the previous concepts about how the model is built within 
+handle your predictions. All the concepts introduced along the first `flink-jpmml`, i.e. how the model is built within 
 the operator, the operator configuration and so forth have been retained and are well described below. 
 
 We kept also the single operator model explained later if you want to bind a specific model to an operator instance.
@@ -138,7 +138,8 @@ If the model has not been uploaded within the operator yet, the latter will expl
 to lazily retrieve the targeted model from the underlying distributed backend.
 
 The control stream is the right tool for the user to provide the global picture of the models available to your
-platform (this well fits a **model repository server** concept).
+platform (this well fits a **model repository server** concept). **You will use this stream to feed the operator with
+the information useful to your input events in order to let them catch easily the models.**
 
 If the events are able to find the model the prediction is computed as a `Prediction` ADT, otherwise
 the outcome will be an `EmptyPrediction`.
@@ -292,6 +293,8 @@ here. `flink-jpmml` community is looking for you!
 ## Authors
 * **Andrea Spina** - [andrea.spina@radicalbit.io](mailto:andrea.spina@radicalbit.io) [@spi-x-i](https://github.com/spi-x-i)
 * **Francesco Frontera** - [francesco.frontera@radicalbit.io](mailto:francesco.frontera@radicalbit.io) [@francescofrontera](https://github.com/francescofrontera)
+* **Riccardo Diomedi** - [riccardo.diomedi@radicalbit.io](mailto:riccardo.diomedi@radicalbit.io) [@riccardo14](https://github.com/riccardo14)
+* **Mauro Cortellazzi** - [mauro.cortellazzi@radicalbit.io](mailto:mauro.cortellazzi@radicalbit.io) [@maocorte](https://github.com/maocorte)
 * **Simone Robutti** - *Initial prototype* [simone.robutti@gmail.com](mailto:simone.robutti@gmail.com) [@chobeat](https://github.com/chobeat)
 * **Stefano Baghino** - *Initial prototype* [@stefanobaghino](https://github.com/stefanobaghino)
 
