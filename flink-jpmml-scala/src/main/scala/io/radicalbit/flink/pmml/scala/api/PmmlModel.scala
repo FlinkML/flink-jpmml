@@ -54,11 +54,17 @@ object PmmlModel {
     val readerFromFs = reader.buildDistributedPath
     val result = fromFilteredSource(readerFromFs)
 
-    new PmmlModel(evaluatorInstance.newModelEvaluator(JAXBUtil.unmarshalPMML(result)))
+    new PmmlModel(Evaluator(evaluatorInstance.newModelEvaluator(JAXBUtil.unmarshalPMML(result))))
   }
 
   private def fromFilteredSource(PMMLPath: String) =
     JAXBUtil.createFilteredSource(new InputSource(new StringReader(PMMLPath)), new ImportFilter())
+
+  /** It provides a new instance of the [[PmmlModel]] with [[EmptyEvaluator]]
+    *
+    * @return [[PmmlModel]] with [[EmptyEvaluator]]
+    */
+  private[api] def empty = new PmmlModel(Evaluator.empty)
 
 }
 
@@ -117,7 +123,7 @@ class PmmlModel(private[api] val evaluator: Evaluator) extends Pipeline {
     * @return The converted instance
     */
   private[api] def validateInput(v: Vector)(implicit vec2Pmml: (Vector, Evaluator) => PmmlInput): PmmlInput = {
-    val modelSize = evaluator.getActiveFields.size
+    val modelSize = evaluator.model.getActiveFields.size
 
     if (v.size != modelSize)
       throw new InputValidationException(s"input vector $v size ${v.size} is not conform to model size $modelSize")
@@ -134,7 +140,7 @@ class PmmlModel(private[api] val evaluator: Evaluator) extends Pipeline {
     */
   private[api] def prepareInput(input: PmmlInput, replaceNaN: Option[Double]): Map[FieldName, FieldValue] = {
 
-    val activeFields = evaluator.getActiveFields
+    val activeFields = evaluator.model.getActiveFields
 
     activeFields.map { field =>
       val rawValue = input.get(field.getName.getValue).orElse(replaceNaN).orNull
@@ -149,7 +155,7 @@ class PmmlModel(private[api] val evaluator: Evaluator) extends Pipeline {
     * @return JPMML output result as a Java map
     */
   private[api] def evaluateInput(preparedInput: Map[FieldName, FieldValue]): util.Map[FieldName, _] =
-    evaluator.evaluate(preparedInput)
+    evaluator.model.evaluate(preparedInput)
 
   /** Extracts the target from evaluation result
     * @throws JPMMLExtractionException if the target couldn't be extracted

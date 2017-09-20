@@ -42,7 +42,7 @@ private[scala] abstract class EvaluationFunction[IN, OUT](reader: ModelReader)
 
   protected lazy val evaluator: PmmlModel = PmmlModel.fromReader(reader)
 
-  override def open(parameters: Configuration): Unit = Try(evaluator.evaluator.getModel) match {
+  override def open(parameters: Configuration): Unit = Try(evaluator.evaluator.model.getModel) match {
     case Success(model) => logger.info(s"Model has been read successfully, model name: {}", model.getModelName)
     case Failure(e) => throw new ModelLoadingException(e.getMessage, e)
   }

@@ -20,12 +20,13 @@
 package io.radicalbit.flink.pmml.scala.api
 
 import io.radicalbit.flink.pmml.scala.{InputPreparationException, InputValidationException, JPMMLExtractionException}
+import io.radicalbit.flink.pmml.scala.api.exceptions._
 import io.radicalbit.flink.pmml.scala.api.reader.ModelReader
 import io.radicalbit.flink.pmml.scala.models.{Prediction, Score, Target}
 import io.radicalbit.flink.pmml.scala.utils.{PmmlEvaluatorKit, PmmlLoaderKit}
 import org.apache.flink.ml.math.{DenseVector, SparseVector}
 import org.dmg.pmml.MiningField.UsageType
-import org.dmg.pmml.{DataField, DataType, FieldName, InvalidValueTreatmentMethod, MiningField, OpType, OutputField}
+import org.dmg.pmml.{Array => _, _}
 import org.jpmml.evaluator.{FieldValueUtil, TargetField}
 import org.scalatest.{Matchers, WordSpec}
 
@@ -43,6 +44,7 @@ class PmmlModelSpec extends WordSpec with Matchers with PmmlLoaderKit with PmmlE
   private val model = new PmmlModel(evaluator)
   private val modelStrings = new PmmlModel(evaluatorStrings)
   private val modelNoOutput = new PmmlModel(evaluatorNoOutput)
+  private val noneModel = new PmmlModel(Evaluator.empty)
 
   "PmmlModel" should {
 
@@ -87,49 +89,57 @@ class PmmlModelSpec extends WordSpec with Matchers with PmmlLoaderKit with PmmlE
 
     "return a Map[FieldName,FieldValue] from a trivial inputMap" in {
       val inputVector = DenseVector(1.0, 1.0, 1.0, 1.0)
-      val inputMap = buildExpectedInputMap(inputVector, evaluator.getActiveFields.map(_.getName.getValue))
+      val inputMap = buildExpectedInputMap(inputVector, evaluator.model.getActiveFields.map(_.getName.getValue))
       val result = model.prepareInput(inputMap, None)
 
-      result shouldBe buildExpectedPreparedMap(inputMap, evaluator.getActiveFields.map(_.getName.getValue), None)
+      result shouldBe buildExpectedPreparedMap(inputMap, evaluator.model.getActiveFields.map(_.getName.getValue), None)
     }
 
     "return a Map[FieldName, FieldValue] from a non-trivial inputMap" in {
       val inputVector = DenseVector(2.0, -1.0, 3.0, 2.0)
-      val inputMap = buildExpectedInputMap(inputVector, evaluator.getActiveFields.map(_.getName.getValue))
+      val inputMap = buildExpectedInputMap(inputVector, evaluator.model.getActiveFields.map(_.getName.getValue))
       val result = model.prepareInput(inputMap, None)
 
-      result shouldBe buildExpectedPreparedMap(inputMap, evaluator.getActiveFields.map(_.getName.getValue), None)
+      result shouldBe buildExpectedPreparedMap(inputMap, evaluator.model.getActiveFields.map(_.getName.getValue), None)
     }
 
     "return a Map[FieldName, FieldValue] from a trivial SparseVector" in {
       val inputVector = SparseVector(4, Array(0, 1, 2, 3), Array(1.0, 2.0, 3.0, 4.0))
-      val inputMap = buildExpectedInputMap(inputVector, evaluator.getActiveFields.map(_.getName.getValue))
+      val inputMap = buildExpectedInputMap(inputVector, evaluator.model.getActiveFields.map(_.getName.getValue))
       val result = model.prepareInput(inputMap, None)
 
-      result shouldBe buildExpectedPreparedMap(inputMap, evaluator.getActiveFields.map(_.getName.getValue), None)
+      result shouldBe buildExpectedPreparedMap(inputMap, evaluator.model.getActiveFields.map(_.getName.getValue), None)
     }
 
     "return a Map[FieldName, FieldValue] from a non-trivial SparseVector" in {
       val inputVector = SparseVector(4, Array(0, 2), Array(1.0, 2.0))
-      val inputMap = buildExpectedInputMap(inputVector, evaluator.getActiveFields.map(_.getName.getValue))
+      val inputMap = buildExpectedInputMap(inputVector, evaluator.model.getActiveFields.map(_.getName.getValue))
       val result = model.prepareInput(inputMap, None)
 
-      result shouldBe buildExpectedPreparedMap(inputMap, evaluator.getActiveFields.map(_.getName.getValue), None)
+      result shouldBe buildExpectedPreparedMap(inputMap, evaluator.model.getActiveFields.map(_.getName.getValue), None)
     }
 
     "return a Map[FieldName, FieldValue] from a non-trivial SparseVector with replace value if specified" in {
       val inputVector = SparseVector(4, Array(0, 2), Array(1.0, 2.0))
-      val inputMap = buildExpectedInputMap(inputVector, evaluator.getActiveFields.map(_.getName.getValue))
+      val inputMap = buildExpectedInputMap(inputVector, evaluator.model.getActiveFields.map(_.getName.getValue))
       val result = model.prepareInput(inputMap, Some(0.0))
 
-      result shouldBe buildExpectedPreparedMap(inputMap, evaluator.getActiveFields.map(_.getName.getValue), Some(0.0))
+      result shouldBe buildExpectedPreparedMap(inputMap,
+                                               evaluator.model.getActiveFields.map(_.getName.getValue),
+                                               Some(0.0))
     }
 
     "throw a InputPreparationException if the fields can't be prepared correctly" in {
       val inputVector = DenseVector(1.0, 4.0, -1.0, 3.0)
-      val inputMap = buildExpectedInputMap(inputVector, evaluatorStrings.getActiveFields.map(_.getName.getValue))
+      val inputMap = buildExpectedInputMap(inputVector, evaluatorStrings.model.getActiveFields.map(_.getName.getValue))
 
       an[InputPreparationException] should be thrownBy modelStrings.prepareInput(inputMap, None)
+    }
+
+    "throw a EmptyEvaluatorException if the evaluator is an EmptyEvaluator" in {
+      val inputVector = DenseVector(1.0, 4.0, -1.0, 3.0)
+      val inputMap = buildExpectedInputMap(inputVector, evaluator.model.getActiveFields.map(_.getName.getValue))
+      an[EmptyEvaluatorException] should be thrownBy noneModel.prepareInput(inputMap, None)
     }
 
   }
@@ -139,25 +149,25 @@ class PmmlModelSpec extends WordSpec with Matchers with PmmlLoaderKit with PmmlE
     "return a Map[String, Any] from a trivial DenseVector" in {
       val inputVector = DenseVector(1.0, 1.0, 1.0, 1.0)
       val result: Map[String, Any] = model.validateInput(inputVector)
-      result shouldBe buildExpectedInputMap(inputVector, evaluator.getActiveFields.map(_.getName.getValue))
+      result shouldBe buildExpectedInputMap(inputVector, evaluator.model.getActiveFields.map(_.getName.getValue))
     }
 
     "return a Map[String,Any] from a non-trivial DenseVector" in {
       val inputVector = DenseVector(2.0, -1.0, 3.0, 2.0)
       val result = model.validateInput(inputVector)
-      result shouldBe buildExpectedInputMap(inputVector, evaluator.getActiveFields.map(_.getName.getValue))
+      result shouldBe buildExpectedInputMap(inputVector, evaluator.model.getActiveFields.map(_.getName.getValue))
     }
 
     "return a Map[String, Any] from a trivial SparseVector" in {
       val inputVector = SparseVector(4, Array(0, 1, 2, 3), Array(1.0, 2.0, 3.0, 4.0))
       val result = model.validateInput(inputVector)
-      result shouldBe buildExpectedInputMap(inputVector, evaluator.getActiveFields.map(_.getName.getValue))
+      result shouldBe buildExpectedInputMap(inputVector, evaluator.model.getActiveFields.map(_.getName.getValue))
     }
 
     "return a Map[String, Any] from a non-trivial SparseVector" in {
       val inputVector = SparseVector(4, Array(0, 2), Array(1.0, 2.0))
       val result = model.validateInput(inputVector)
-      result shouldBe buildExpectedInputMap(inputVector, evaluator.getActiveFields.map(_.getName.getValue))
+      result shouldBe buildExpectedInputMap(inputVector, evaluator.model.getActiveFields.map(_.getName.getValue))
     }
 
     "throw a InputValidationException if the dense input vector is not valid (exceed model dimension)" in {
@@ -175,6 +185,11 @@ class PmmlModelSpec extends WordSpec with Matchers with PmmlLoaderKit with PmmlE
       an[InputValidationException] should be thrownBy model.validateInput(inputVector)
     }
 
+    "throw a EmptyEvaluatorException if the evaluator is an EmptyEvaluator" in {
+      val inputVector = DenseVector(1.0, 3.0)
+      an[EmptyEvaluatorException] should be thrownBy noneModel.validateInput(inputVector)
+    }
+
   }
 
   "PmmlModel.extractTarget" should {
@@ -185,7 +200,7 @@ class PmmlModelSpec extends WordSpec with Matchers with PmmlLoaderKit with PmmlE
       val miningField = buildMiningField("clazz", MiningField.UsageType.PREDICTED, InvalidValueTreatmentMethod.AS_IS)
       val dataField = buildDataField("clazz", OpType.CATEGORICAL, DataType.STRING)
 
-      val target = new TargetField(dataField, miningField, evaluator.getTargetField.getTarget)
+      val target = new TargetField(dataField, miningField, evaluator.model.getTargetField.getTarget)
 
       val result: Map[FieldName, _] = Map(
         outputField.getName -> outputField,
@@ -204,7 +219,7 @@ class PmmlModelSpec extends WordSpec with Matchers with PmmlLoaderKit with PmmlE
       val miningField = buildMiningField("clazz", MiningField.UsageType.PREDICTED, InvalidValueTreatmentMethod.AS_IS)
       val dataField = buildDataField("clazz", OpType.CONTINUOUS, DataType.DOUBLE)
 
-      val target = new TargetField(dataField, miningField, evaluator.getTargetField.getTarget)
+      val target = new TargetField(dataField, miningField, evaluator.model.getTargetField.getTarget)
 
       val result: Map[FieldName, _] = Map(
         outputField.getName -> outputField,
@@ -227,14 +242,21 @@ class PmmlModelSpec extends WordSpec with Matchers with PmmlLoaderKit with PmmlE
 
     }
 
+    "throw a EmptyEvaluatorException if the evaluator is an EmptyEvaluator" in {
+      val outputField = buildOutputField("PCluster", OpType.CATEGORICAL, DataType.STRING)
+      val result: Map[FieldName, _] = Map(outputField.getName -> outputField)
+      an[EmptyEvaluatorException] should be thrownBy noneModel.extractTarget(result)
+    }
+
   }
 
   "PmmlModel.extractOutputFields" should {
 
     "return right output fields" in {
       val evaluationResultTest = buildExpectedPreparedMap(
-        buildExpectedInputMap(DenseVector(1.0, 1.0, 1.0, 1.0), evaluator.getActiveFields.map(_.getName.getValue)),
-        evaluator.getActiveFields.map(_.getName.getValue),
+        buildExpectedInputMap(DenseVector(1.0, 1.0, 1.0, 1.0),
+                              evaluator.model.getActiveFields.map(_.getName.getValue)),
+        evaluator.model.getActiveFields.map(_.getName.getValue),
         None
       )
       val result = model.extractOutputFields(evaluationResultTest)
@@ -244,12 +266,22 @@ class PmmlModelSpec extends WordSpec with Matchers with PmmlLoaderKit with PmmlE
     "return an empty Map if no output field are present" in {
       val evaluationResultTest = buildExpectedPreparedMap(
         buildExpectedInputMap(DenseVector(1.0, 1.0, 1.0, 1.0),
-                              evaluatorNoOutput.getActiveFields.map(_.getName.getValue)),
-        evaluatorNoOutput.getActiveFields.map(_.getName.getValue),
+                              evaluatorNoOutput.model.getActiveFields.map(_.getName.getValue)),
+        evaluatorNoOutput.model.getActiveFields.map(_.getName.getValue),
         None
       )
       val result = modelNoOutput.extractOutputFields(evaluationResultTest)
       assert(result.toMap.keys == Set())
+    }
+
+    "throw a EmptyEvaluatorException if the evaluator is an EmptyEvaluator" in {
+      val evaluationResultTest = buildExpectedPreparedMap(
+        buildExpectedInputMap(DenseVector(1.0, 1.0, 1.0, 1.0),
+                              evaluator.model.getActiveFields.map(_.getName.getValue)),
+        evaluator.model.getActiveFields.map(_.getName.getValue),
+        None
+      )
+      an[EmptyEvaluatorException] should be thrownBy noneModel.extractOutputFields(evaluationResultTest)
     }
 
   }
@@ -258,12 +290,23 @@ class PmmlModelSpec extends WordSpec with Matchers with PmmlLoaderKit with PmmlE
 
     "return the right target fields" in {
       val evaluationResultTest = buildExpectedPreparedMap(
-        buildExpectedInputMap(DenseVector(1.0, 1.0, 1.0, 1.0), evaluator.getActiveFields.map(_.getName.getValue)),
-        evaluator.getActiveFields.map(_.getName.getValue),
+        buildExpectedInputMap(DenseVector(1.0, 1.0, 1.0, 1.0),
+                              evaluator.model.getActiveFields.map(_.getName.getValue)),
+        evaluator.model.getActiveFields.map(_.getName.getValue),
         None
       )
       val result = model.extractTargetFields(evaluationResultTest)
       assert(result.toMap.keys == Set("clazz"))
+    }
+
+    "throw a EmptyEvaluatorException if the evaluator is an EmptyEvaluator" in {
+      val evaluationResultTest = buildExpectedPreparedMap(
+        buildExpectedInputMap(DenseVector(1.0, 1.0, 1.0, 1.0),
+                              evaluator.model.getActiveFields.map(_.getName.getValue)),
+        evaluator.model.getActiveFields.map(_.getName.getValue),
+        None
+      )
+      an[EmptyEvaluatorException] should be thrownBy noneModel.extractTargetFields(evaluationResultTest)
     }
 
   }

@@ -19,14 +19,15 @@
 
 package io.radicalbit.flink.pmml.scala.utils
 
+import io.radicalbit.flink.pmml.scala.api.Evaluator
 import org.apache.flink.ml.math.{DenseVector, SparseVector, Vector}
-import org.dmg.pmml.{FieldName, Model, PMML}
-import org.jpmml.evaluator.{FieldValueUtil, ModelEvaluator, ModelEvaluatorFactory}
+import org.dmg.pmml.{FieldName, PMML}
+import org.jpmml.evaluator.{FieldValueUtil, ModelEvaluatorFactory}
 
 trait PmmlEvaluatorKit {
 
-  final protected def buildEvaluator(pmml: PMML): ModelEvaluator[_ <: Model] =
-    ModelEvaluatorFactory.newInstance.newModelEvaluator(pmml)
+  final protected def buildEvaluator(pmml: PMML): Evaluator =
+    Evaluator(ModelEvaluatorFactory.newInstance.newModelEvaluator(pmml))
 
   final protected def buildExpectedInputMap(in: Vector, keys: Seq[String]) = {
     val data: Seq[Option[Double]] = in match {
