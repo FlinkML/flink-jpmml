@@ -30,7 +30,7 @@ object Evaluator {
 
   /** If the evaluator exists, it returns a [[PmmlEvaluator]], [[EmptyEvaluator]] otherwise.
     *
-    * @param evaluator An instance of [[ModelEvaluator]]
+    * @param evaluator An instance of [[org.jpmml.evaluator.ModelEvaluator]]
     * @return An instance of [[Evaluator]]
     */
   def apply(evaluator: ModelEvaluator[_ <: Model]): Evaluator = PmmlEvaluator(evaluator)
@@ -50,7 +50,7 @@ sealed trait Evaluator {
 
   def model: ModelEvaluator[_ <: Model]
 
-  /** Returns [[ModelEvaluator]]] if evaluator has value, default value otherwise
+  /** Returns [[org.jpmml.evaluator.ModelEvaluator]]] if evaluator has value, default value otherwise
     *
     * @param default the defined default value
     * @return the current evaluator if it has value, default otherwise
@@ -84,7 +84,7 @@ final case class PmmlEvaluator(modelEval: ModelEvaluator[_ <: Model]) extends Ev
 
   /**
     * Retrieving the evaluator of the JpmmlEvaluator
-    * @return the [[ModelEvaluator]]
+    * @return the [[org.jpmml.evaluator.ModelEvaluator]]
     */
   override def model: ModelEvaluator[_ <: Model] = modelEval
 

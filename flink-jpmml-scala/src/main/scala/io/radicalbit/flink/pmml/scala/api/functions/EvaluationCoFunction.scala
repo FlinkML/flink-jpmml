@@ -76,7 +76,6 @@ private[scala] abstract class EvaluationCoFunction[EVENT, CTRL <: ServingMessage
   override def snapshotState(context: FunctionSnapshotContext): Unit = {
     snapshotMetadata.clear()
     snapshotMetadata.add(new MetadataCheckpoint(servingMetadata.asJava))
-
   }
 
   override def initializeState(context: FunctionInitializationContext): Unit = {
