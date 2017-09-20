@@ -1,8 +1,8 @@
-## Running Examples
+## Running simple examples
 This module contains the examples running simple predictions from an iris Source.
 The source emits the following data: 
 ```
-Iris(sepalLength: Double, sepalWidth: Double, petalLength: Double, petalWidth: Double)
+Iris(,sepalLength: Double, sepalWidth: Double, petalLength: Double, petalWidth: Double)
 ```
 In order to keep the example run
 
@@ -24,6 +24,20 @@ Either you can employ the _quick_ predictor:
 ```
 ./path/to/bin/flink run -c io.radicalbit.examples.QuickEvaluateKmeans <path/to/project/root>/flink-jpmml/flink-jpmml-examples/target/scala-2.x/flink-jpmml-examples-assembly-0.6.0-SNAPSHOT.jar --model path/to/pmml/model.pmml --output /path/to/output
 ```
+
+## Fault-Tolerant
+
+if you like testing a fault-tolerant of the operator you can run a `CheckpointEvaluate` example.
+
+In order to do that: 
+
+1) Create a socket in your local machine:
+```
+nc -l -k 9999
+```
+
+2) Run the flink-cluster
+
 
 
 Both above jobs log out predictions to output path.
