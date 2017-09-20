@@ -23,39 +23,32 @@ package object exceptions {
 
   /** Models conformity failure between PMML model and input [[org.apache.flink.streaming.api.scala.DataStream]]
     *
-    * @param msg
     */
   private[scala] class InputValidationException(msg: String) extends RuntimeException(msg)
 
   /** Models [[org.jpmml.evaluator.EvaluatorUtil.prepare()]] method failure
     *
-    * @param msg
     */
   private[scala] class InputPreparationException(msg: String) extends RuntimeException(msg)
 
   /** Models empty result from [[org.jpmml.evaluator.ModelEvaluator]] evaluation
     *
-    * @param msg
     */
   private[scala] class JPMMLExtractionException(msg: String) extends RuntimeException(msg)
 
   /** Models failure on loading PMML model from distributed system
     *
-    * @param msg
-    * @param throwable
     */
   private[scala] class ModelLoadingException(msg: String, throwable: Throwable)
       extends RuntimeException(msg, throwable)
 
   /** Prediction failure due to [[io.radicalbit.flink.pmml.scala.api.EmptyEvaluator]]
     *
-    * @param msg
     */
   private[scala] class EmptyEvaluatorException(msg: String) extends NoSuchElementException(msg)
 
   /** Parsing of ModelId has failed
     *
-    * @param msg
     */
   private[scala] class WrongModelIdFormat(msg: String) extends ArrayIndexOutOfBoundsException(msg)
 
