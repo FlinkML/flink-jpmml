@@ -24,7 +24,7 @@ import org.dmg.pmml.Model
 import org.jpmml.evaluator.ModelEvaluator
 
 /**
-  * Represent the Evaluator of a PmmlModel
+  * Represents the Evaluator of a PmmlModel
   */
 object Evaluator {
 
