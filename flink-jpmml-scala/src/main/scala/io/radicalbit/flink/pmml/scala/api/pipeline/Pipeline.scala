@@ -21,7 +21,7 @@ package io.radicalbit.flink.pmml.scala.api.pipeline
 
 import io.radicalbit.flink.pmml.scala.api._
 import io.radicalbit.flink.pmml.scala.api.exceptions.InputPreparationException
-import io.radicalbit.flink.pmml.scala.models.Prediction
+import io.radicalbit.flink.pmml.scala.models.prediction.Prediction
 import org.apache.flink.ml.math.Vector
 import org.dmg.pmml.FieldName
 import org.jpmml.evaluator.{EvaluatorUtil, FieldValue, ModelField}

@@ -21,7 +21,7 @@ package io.radicalbit.flink.pmml.scala.api
 
 import io.radicalbit.flink.pmml.scala.api.exceptions._
 import io.radicalbit.flink.pmml.scala.api.reader.ModelReader
-import io.radicalbit.flink.pmml.scala.models.{Prediction, Score, Target}
+import io.radicalbit.flink.pmml.scala.models.prediction.{Prediction, Score, Target}
 import io.radicalbit.flink.pmml.scala.utils.{PmmlEvaluatorKit, PmmlLoaderKit}
 import org.apache.flink.ml.math.{DenseVector, SparseVector}
 import org.dmg.pmml.MiningField.UsageType

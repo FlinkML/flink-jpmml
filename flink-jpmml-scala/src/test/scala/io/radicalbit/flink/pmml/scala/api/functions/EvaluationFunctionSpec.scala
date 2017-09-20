@@ -19,11 +19,12 @@
 
 package io.radicalbit.flink.pmml.scala.api.functions
 
-import io.radicalbit.flink.pmml.scala.RichDataStreamSpec.Input
 import io.radicalbit.flink.pmml.scala.api.PmmlModel
 import io.radicalbit.flink.pmml.scala.api.reader.ModelReader
-import io.radicalbit.flink.pmml.scala.models.{Prediction, Score}
+import io.radicalbit.flink.pmml.scala.models.prediction.{Prediction, Score}
+import io.radicalbit.flink.pmml.scala.utils.models.Input
 import io.radicalbit.flink.pmml.scala.utils.{FlinkPipelineTestKit, FlinkTestKitCompanion, PmmlLoaderKit}
+
 import org.apache.flink.api.scala.ClosureCleaner
 import org.apache.flink.streaming.api.scala._
 import org.apache.flink.util.Collector

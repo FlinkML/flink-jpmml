@@ -47,4 +47,9 @@ package object exceptions {
     */
   private[scala] class EmptyEvaluatorException(msg: String) extends NoSuchElementException(msg)
 
+  /** Parsing of ModelId has failed
+    *
+    */
+  private[scala] class WrongModelIdFormat(msg: String) extends ArrayIndexOutOfBoundsException(msg)
+
 }

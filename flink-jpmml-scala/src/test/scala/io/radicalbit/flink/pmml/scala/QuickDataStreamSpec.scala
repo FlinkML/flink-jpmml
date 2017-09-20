@@ -20,7 +20,7 @@
 package io.radicalbit.flink.pmml.scala
 
 import io.radicalbit.flink.pmml.scala.api.reader.ModelReader
-import io.radicalbit.flink.pmml.scala.models.{EmptyScore, Prediction, Score, Target}
+import io.radicalbit.flink.pmml.scala.models.prediction.{Prediction, Score, Target}
 import io.radicalbit.flink.pmml.scala.utils.{FlinkPipelineTestKit, FlinkTestKitCompanion, PmmlLoaderKit}
 import org.apache.flink.api.scala.ClosureCleaner
 import org.apache.flink.ml.math.{DenseVector, SparseVector, Vector}

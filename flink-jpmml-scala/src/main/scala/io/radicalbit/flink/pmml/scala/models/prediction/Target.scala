@@ -17,7 +17,7 @@
  * along with flink-JPMML.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package io.radicalbit.flink.pmml.scala.models
+package io.radicalbit.flink.pmml.scala.models.prediction
 
 /** Represents the result output value; if the target is present has [[Score]] value,
   * [[EmptyScore]] otherwise.

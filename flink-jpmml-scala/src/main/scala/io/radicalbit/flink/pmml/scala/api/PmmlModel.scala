@@ -25,7 +25,7 @@ import java.util
 import io.radicalbit.flink.pmml.scala.api.exceptions.{InputValidationException, JPMMLExtractionException}
 import io.radicalbit.flink.pmml.scala.api.pipeline.Pipeline
 import io.radicalbit.flink.pmml.scala.api.reader.ModelReader
-import io.radicalbit.flink.pmml.scala.models._
+import io.radicalbit.flink.pmml.scala.models.prediction.Prediction
 import org.apache.flink.ml.math.Vector
 import org.dmg.pmml.FieldName
 import org.jpmml.evaluator._
@@ -87,6 +87,8 @@ class PmmlModel(private[api] val evaluator: Evaluator) extends Pipeline {
 
   import io.radicalbit.flink.pmml.scala.api.converter.VectorConverter._
 
+  final def modelName: String = evaluator.model.getModel.getModelName
+
   /** Implements the entire prediction pipeline, which can be described as 4 main steps:
     *
     * - `validateInput` validates the input to be conform to PMML model size
@@ -97,12 +99,12 @@ class PmmlModel(private[api] val evaluator: Evaluator) extends Pipeline {
     *
     * - `extractTarget` extracts the target from evaluation result.
     *
-    * As final action the pipelined statement is executed by [[io.radicalbit.flink.pmml.scala.models.Prediction]]
+    * As final action the pipelined statement is executed by [[Prediction]]
     *
     * @param inputVector the input event as a [[org.apache.flink.ml.math.Vector]] instance
     * @param replaceNan A [[scala.Option]] describing a replace value for not defined vector values
     * @tparam V subclass of [[org.apache.flink.ml.math.Vector]]
-    * @return [[io.radicalbit.flink.pmml.scala.models.Prediction]] instance
+    * @return [[Prediction]] instance
     */
   final def predict[V <: Vector](inputVector: V, replaceNan: Option[Double] = None): Prediction = {
     val result = Try {
