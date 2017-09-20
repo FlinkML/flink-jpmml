@@ -19,7 +19,6 @@
 
 package io.radicalbit.flink.pmml.scala.api
 
-import io.radicalbit.flink.pmml.scala.{InputPreparationException, InputValidationException, JPMMLExtractionException}
 import io.radicalbit.flink.pmml.scala.api.exceptions._
 import io.radicalbit.flink.pmml.scala.api.reader.ModelReader
 import io.radicalbit.flink.pmml.scala.models.{Prediction, Score, Target}

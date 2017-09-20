@@ -19,8 +19,8 @@
 
 package io.radicalbit.flink.pmml.scala.api.functions
 
-import io.radicalbit.flink.pmml.scala.ModelLoadingException
 import io.radicalbit.flink.pmml.scala.api.PmmlModel
+import io.radicalbit.flink.pmml.scala.api.exceptions.ModelLoadingException
 import io.radicalbit.flink.pmml.scala.api.reader.ModelReader
 import io.radicalbit.flink.pmml.scala.logging.LazyLogging
 import org.apache.flink.api.common.functions.RichFlatMapFunction

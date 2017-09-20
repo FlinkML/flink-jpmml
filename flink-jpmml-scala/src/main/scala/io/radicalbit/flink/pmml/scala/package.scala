@@ -93,33 +93,6 @@ package object scala {
         val result: Prediction = model.predict(vec, None)
         (result, vec)
       }
-
   }
-
-  /** Models conformity failure between PMML model and input [[org.apache.flink.streaming.api.scala.DataStream]]
-    *
-    * @param msg
-    */
-  private[scala] class InputValidationException(msg: String) extends RuntimeException(msg)
-
-  /** Models [[org.jpmml.evaluator.EvaluatorUtil.prepare()]] method failure
-    *
-    * @param msg
-    */
-  private[scala] class InputPreparationException(msg: String) extends RuntimeException(msg)
-
-  /** Models empty result from [[org.jpmml.evaluator.ModelEvaluator]] evaluation
-    *
-    * @param msg
-    */
-  private[scala] class JPMMLExtractionException(msg: String) extends RuntimeException(msg)
-
-  /** Models failure on loading PMML model from distributed system
-    *
-    * @param msg
-    * @param throwable
-    */
-  private[scala] class ModelLoadingException(msg: String, throwable: Throwable)
-      extends RuntimeException(msg, throwable)
 
 }
