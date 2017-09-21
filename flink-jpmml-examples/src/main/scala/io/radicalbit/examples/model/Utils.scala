@@ -17,17 +17,21 @@
  * along with flink-JPMML.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package io.radicalbit.examples.models
+package io.radicalbit.examples.model
 
-import io.radicalbit.flink.pmml.scala.models.input.BaseEvent
-import org.apache.flink.ml.math.DenseVector
+import java.util.UUID
 
-case class Iris(modelId: String,
-                sepalLength: Double,
-                sepalWidth: Double,
-                petalLength: Double,
-                petalWidth: Double,
-                occurredOn: Long)
-    extends BaseEvent {
-  def toVector = DenseVector(sepalLength, sepalWidth, petalLength, petalWidth)
+import io.radicalbit.flink.pmml.scala.models.core.ModelId
+
+object Utils {
+
+  final val modelVersion = 1.toString
+
+  def retrieveMappingIdPath(modelPaths: Seq[String]): Map[String, String] =
+    modelPaths.map(path => (UUID.randomUUID().toString, path)).toMap
+
+  def retrieveAvailableId(mappingIdPath: Map[String, String]): Seq[String] =
+    mappingIdPath.keys.map(name => name + ModelId.separatorSymbol + modelVersion).toSeq
+
+  def now(): Long = System.currentTimeMillis()
 }
