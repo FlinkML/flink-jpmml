@@ -19,22 +19,50 @@
  *
  */
 
-import sbt.Keys._
-import sbt._
+import com.typesafe.sbt.SbtPgp.autoImportImpl.PgpKeys
+import sbt.Keys.{publishMavenStyle, _}
+import sbt.{Def, url, _}
+import sbtrelease.ReleasePlugin.autoImport.{releaseCrossBuild, releasePublishArtifactsAction}
+import xerial.sbt.Sonatype._
 
 object PublishSettings {
 
-  lazy val settings: Seq[Def.Setting[_]] = Seq(
-    publishArtifact := true,
-    publishArtifact in (Compile, packageDoc) := false,
-    publishMavenStyle := true,
-    publishTo := version { (v: String) =>
-      if (v.trim.endsWith("SNAPSHOT"))
-        Some("Radicalbit Snapshots" at "https://tools.radicalbit.io/maven/repository/snapshots/")
+  lazy val settings: Seq[Def.Setting[_]] = sonatypeSettings ++ Seq(
+    publishTo := Some(
+      if (isSnapshot.value)
+        Opts.resolver.sonatypeSnapshots
       else
-        Some("Radicalbit Releases" at "https://tools.radicalbit.io/maven/repository/internal/")
-    }.value,
-    credentials += Credentials(Path.userHome / ".artifactory" / ".archiva-snapshots"),
-    credentials += Credentials(Path.userHome / ".artifactory" / ".archiva-releases")
+        Opts.resolver.sonatypeStaging
+    ),
+    publishMavenStyle := true,
+    licenses := Seq("AGPL-3.0" -> url("https://opensource.org/licenses/AGPL-3.0")),
+    homepage := Some(url("https://github.com/FlinkML/flink-jpmml")),
+    scmInfo := Some(
+      ScmInfo(
+        url("https://github.com/FlinkML/flink-jpmml"),
+        "scm:git:git@github.com:FlinkML/flink-jpmml.git"
+      )
+    ),
+    developers := List(
+      Developer(id = "spi-x-i",
+                name = "Andrea Spina",
+                email = "andrea.spina@radicalbit.io",
+                url = url("https://github.com/spi-x-i")),
+      Developer(id = "francescofrontera",
+                name = "Francesco Frontera",
+                email = "francesco.frontera@radicalbit.io",
+                url = url("https://github.com/francescofrontera")),
+      Developer(id = "riccardo14",
+                name = "Riccardo Diomedi",
+                email = "riccardo.diomedi@radicalbit.io",
+                url = url("https://github.com/riccardo14")),
+      Developer(id = "maocorte",
+                name = "Mauro Cortellazzi",
+                email = "mauro.cortellazzi@radicalbit.io",
+                url = url("https://github.com/maocorte"))
+    ),
+    autoAPIMappings := true,
+    releaseCrossBuild := true,
+    releasePublishArtifactsAction := PgpKeys.publishSigned.value
   )
 }
