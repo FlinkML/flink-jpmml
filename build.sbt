@@ -32,9 +32,7 @@ lazy val noPublishSetting = Seq(
 
 lazy val root = project
   .in(file("."))
-  .settings(Commons.settings: _*)
   .settings(noPublishSetting)
-  .settings(PublishSettings.settings: _*)
   .enablePlugins(ScalaUnidocPlugin)
   .settings(
     name := "flink-jpmml",
