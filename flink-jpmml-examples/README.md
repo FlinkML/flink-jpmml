@@ -18,11 +18,11 @@ assembly
 
 3) Run the examples. If you want full predictions:
 ```
-./path/to/bin/flink run -c io.radicalbit.examples.EvaluateKmeans <path/to/project/root>/flink-jpmml/flink-jpmml-examples/target/scala-2.x/flink-jpmml-examples-assembly-0.6.0-SNAPSHOT.jar --model path/to/pmml/model.pmml --output /path/to/output
+./path/to/bin/flink run -c io.radicalbit.examples.EvaluateKmeans <path/to/project/root>/flink-jpmml/flink-jpmml-examples/target/scala-2.x/flink-jpmml-examples-assembly-0.7.0-SNAPSHOT.jar --model path/to/pmml/model.pmml --output /path/to/output
 ```
 Either you can employ the _quick_ predictor:
 ```
-./path/to/bin/flink run -c io.radicalbit.examples.QuickEvaluateKmeans <path/to/project/root>/flink-jpmml/flink-jpmml-examples/target/scala-2.x/flink-jpmml-examples-assembly-0.6.0-SNAPSHOT.jar --model path/to/pmml/model.pmml --output /path/to/output
+./path/to/bin/flink run -c io.radicalbit.examples.QuickEvaluateKmeans <path/to/project/root>/flink-jpmml/flink-jpmml-examples/target/scala-2.x/flink-jpmml-examples-assembly-0.7.0-SNAPSHOT.jar --model path/to/pmml/model.pmml --output /path/to/output
 ```
 
 ## Fault-Tolerance
@@ -43,7 +43,7 @@ nc -l -k 9999
 
 3) run the flink job:
 ```
-./path/to/bin/flink run -c io.radicalbit.examples.CheckpointEvaluate <path/to/project/root>/flink-jpmml/flink-jpmml-examples/target/scala-2.x/flink-jpmml-examples-assembly-0.6.0-SNAPSHOT.jar --output /path/to/output
+./path/to/bin/flink run -c io.radicalbit.examples.CheckpointEvaluate <path/to/project/root>/flink-jpmml/flink-jpmml-examples/target/scala-2.x/flink-jpmml-examples-assembly-0.7.0-SNAPSHOT.jar --output /path/to/output
 ```
 
 4) Send the model via socket, in this case you can use the models in `flink-jpmml-assets`:

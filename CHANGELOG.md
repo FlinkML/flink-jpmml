@@ -2,11 +2,24 @@
 
 ## [Unreleased](https://github.com/FlinkML/flink-jpmml/tree/HEAD)
 
-[Full Changelog](https://github.com/FlinkML/flink-jpmml/compare/v0.6.0...HEAD)
+[Full Changelog](https://github.com/FlinkML/flink-jpmml/compare/v0.6.1...HEAD)
+
+**Implemented enhancements:**
+
+- Publish the 0.6.1 version on a public repo [\#3](https://github.com/FlinkML/flink-jpmml/issues/3)
+
+## [v0.6.1](https://github.com/FlinkML/flink-jpmml/tree/v0.6.1) (2017-09-22)
+[Full Changelog](https://github.com/FlinkML/flink-jpmml/compare/v0.6.0...v0.6.1)
 
 **Closed issues:**
 
+- Adding Changelog file [\#42](https://github.com/FlinkML/flink-jpmml/issues/42)
 - Releasing flink-jpmml 0.6.0 [\#30](https://github.com/FlinkML/flink-jpmml/issues/30)
+
+**Merged pull requests:**
+
+- Update publish setting for sonatype [\#44](https://github.com/FlinkML/flink-jpmml/pull/44) ([francescofrontera](https://github.com/francescofrontera))
+- Adding Changelog file [\#43](https://github.com/FlinkML/flink-jpmml/pull/43) ([spi-x-i](https://github.com/spi-x-i))
 
 ## [v0.6.0](https://github.com/FlinkML/flink-jpmml/tree/v0.6.0) (2017-09-21)
 [Full Changelog](https://github.com/FlinkML/flink-jpmml/compare/v0.5.1...v0.6.0)
