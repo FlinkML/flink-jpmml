@@ -24,14 +24,19 @@ resolvers in ThisBuild ++= Seq(
   Resolver.mavenLocal
 )
 
+lazy val noPublishSetting = Seq(
+  publish := {},
+  publishLocal := {},
+  publishArtifact := false
+)
+
 lazy val root = project
   .in(file("."))
+  .settings(noPublishSetting)
   .enablePlugins(ScalaUnidocPlugin)
   .settings(
     name := "flink-jpmml",
     crossScalaVersions := Seq("2.10.6", "2.11.11"),
-    publish := {},
-    publishLocal := {},
     unidocProjectFilter in (ScalaUnidoc, unidoc) := inAnyProject -- inProjects(`flink-jpmml-examples`,
                                                                                `flink-jpmml-assets`)
   )
