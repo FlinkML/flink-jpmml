@@ -19,7 +19,7 @@ In order to getting started, you only need
 ## Adding `flink-jpmml` dependency
 * if you employ sbt add the following dependecy to your project:
     * Snapshot: `"io.radicalbit" %% "flink-jpmml-scala" % "0.7.0-SNAPSHOT"`
-    * Stable: `"io.radicalbit" %% "flink-jpmml-scala" % "0.6.0"`
+    * Stable: `"io.radicalbit" %% "flink-jpmml-scala" % "0.6.1"`
 
 * For [maven](https://maven.apache.org/) users instead:
     * Snapshot
@@ -38,7 +38,7 @@ In order to getting started, you only need
         <dependency>
             <groupId>io.radicalbit</groupId>
             <artifactId>flink-jpmml-scala</artifactId>
-            <version>0.6.0</version>
+            <version>0.6.1</version>
         </dependency>
     </dependencies>
     ```
