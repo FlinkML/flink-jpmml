@@ -28,10 +28,12 @@ import io.radicalbit.flink.pmml.scala.models.core.{ModelId, ModelInfo}
 import io.radicalbit.flink.pmml.scala.models.prediction.{Prediction, Score}
 import io.radicalbit.flink.pmml.scala.utils.models.{BaseInput, DynamicInput}
 import io.radicalbit.flink.pmml.scala.utils._
+import io.radicalbit.flink.streaming.spec.core.FlinkTestKitCompanion
 import org.apache.flink.api.scala.ClosureCleaner
 import org.apache.flink.streaming.api.functions.co.CoProcessFunction
 import org.apache.flink.streaming.api.scala._
 import org.apache.flink.util.Collector
+import org.scalatest.{Matchers, WordSpecLike}
 
 import scala.collection.immutable
 
@@ -58,10 +60,14 @@ object EvaluationCoFunctionSpec extends FlinkTestKitCompanion[Prediction] {
 
 class EvaluationCoFunctionSpec
     extends FlinkSourcedPipelineTestKit[DynamicInput, ServingMessage, Prediction]
+    with WordSpecLike
+    with Matchers
     with PmmlLoaderKit
     with PmmlEvaluatorKit {
 
   import EvaluationCoFunctionSpec._
+
+  private implicit val companion = EvaluationCoFunctionSpec
 
   private val modelPath = getPMMLSource(Source.KmeansPmml)
 
@@ -87,7 +93,7 @@ class EvaluationCoFunctionSpec
         (1L, AddMessage(nameModel, version.toLong, modelPath, System.currentTimeMillis())),
         (3L, AddMessage(nameModel, version.toLong, modelPath, System.currentTimeMillis()))
       )
-      run(eventsStream, controlStream, Seq(defaultPrediction, defaultPrediction), EvaluationCoFunctionSpec)(pipeline)
+      executePipeline(eventsStream, controlStream)(pipeline) shouldBe Seq(defaultPrediction, defaultPrediction)
     }
 
     "load successfully a model" in {

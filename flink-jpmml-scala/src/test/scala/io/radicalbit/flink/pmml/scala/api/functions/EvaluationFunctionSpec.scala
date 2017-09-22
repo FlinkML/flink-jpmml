@@ -23,15 +23,22 @@ import io.radicalbit.flink.pmml.scala.api.PmmlModel
 import io.radicalbit.flink.pmml.scala.api.reader.ModelReader
 import io.radicalbit.flink.pmml.scala.models.prediction.{Prediction, Score}
 import io.radicalbit.flink.pmml.scala.utils.models.Input
-import io.radicalbit.flink.pmml.scala.utils.{FlinkPipelineTestKit, FlinkTestKitCompanion, PmmlLoaderKit}
-
+import io.radicalbit.flink.pmml.scala.utils.PmmlLoaderKit
+import io.radicalbit.flink.streaming.spec.core.{FlinkPipelineTestKit, FlinkTestKitCompanion}
 import org.apache.flink.api.scala.ClosureCleaner
 import org.apache.flink.streaming.api.scala._
 import org.apache.flink.util.Collector
+import org.scalatest.{Matchers, WordSpecLike}
 
 object EvaluationFunctionSpec extends FlinkTestKitCompanion[Prediction]
 
-class EvaluationFunctionSpec extends FlinkPipelineTestKit[Input, Prediction] with PmmlLoaderKit {
+class EvaluationFunctionSpec
+    extends FlinkPipelineTestKit[Input, Prediction]
+    with WordSpecLike
+    with Matchers
+    with PmmlLoaderKit {
+
+  private implicit val companion = EvaluationFunctionSpec
 
   private val reader = ModelReader(getPMMLSource(Source.KmeansPmml))
 
@@ -53,7 +60,7 @@ class EvaluationFunctionSpec extends FlinkPipelineTestKit[Input, Prediction] wit
     }
 
     "return expected behavior on given function" in {
-      run(Seq(Input(1.0, 2.0)), Seq(Prediction(Score(1.0))), EvaluationFunctionSpec)(pipeline)
+      executePipeline(Seq(Input(1.0, 2.0)))(pipeline) shouldBe Seq(Prediction(Score(1.0)))
     }
 
   }

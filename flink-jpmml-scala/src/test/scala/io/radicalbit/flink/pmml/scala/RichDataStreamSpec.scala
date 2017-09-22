@@ -23,10 +23,12 @@ import io.radicalbit.flink.pmml.scala.api.PmmlModel
 import io.radicalbit.flink.pmml.scala.api.reader.ModelReader
 import io.radicalbit.flink.pmml.scala.models.prediction.{Prediction, Score, Target}
 import io.radicalbit.flink.pmml.scala.utils.models.{BaseInput, Input}
-import io.radicalbit.flink.pmml.scala.utils.{FlinkPipelineTestKit, FlinkTestKitCompanion, PmmlLoaderKit}
+import io.radicalbit.flink.pmml.scala.utils.PmmlLoaderKit
+import io.radicalbit.flink.streaming.spec.core.{FlinkPipelineTestKit, FlinkTestKitCompanion}
 import org.apache.flink.api.scala.ClosureCleaner
 import org.apache.flink.runtime.client.JobExecutionException
 import org.apache.flink.streaming.api.scala._
+import org.scalatest.{Matchers, WordSpecLike}
 
 object RichDataStreamSpec extends FlinkTestKitCompanion[Prediction] {
 
@@ -36,9 +38,15 @@ object RichDataStreamSpec extends FlinkTestKitCompanion[Prediction] {
 
 }
 
-class RichDataStreamSpec extends FlinkPipelineTestKit[Input, Prediction] with PmmlLoaderKit {
+class RichDataStreamSpec
+    extends FlinkPipelineTestKit[Input, Prediction]
+    with WordSpecLike
+    with Matchers
+    with PmmlLoaderKit {
 
   import RichDataStreamSpec._
+
+  private implicit val companion = RichDataStreamSpec
 
   private val defaultInput = Input(1.0, 1.0, 1.0, 1.0)
 
@@ -68,15 +76,15 @@ class RichDataStreamSpec extends FlinkPipelineTestKit[Input, Prediction] with Pm
 
       val evalFunction = defaultDenseEvalFunction
 
-      run(in, out, RichDataStreamSpec)(pipelineBuilder(None)(evalFunction))
+      executePipeline(in)(pipelineBuilder(None)(evalFunction)) shouldBe out
     }
 
     "throw JobExecutionException if the model path cannot be loaded" in {
       val randomSource = Source.NotExistingPath
 
       an[JobExecutionException] should be thrownBy {
-        run(Seq(defaultInput), Seq(defaultPrediction), RichDataStreamSpec)(
-          pipelineBuilder(Some(randomSource))(defaultDenseEvalFunction))
+        executePipeline(Seq(defaultInput))(pipelineBuilder(Some(randomSource))(defaultDenseEvalFunction)) shouldBe Seq(
+          defaultPrediction)
       }
     }
 
@@ -84,15 +92,15 @@ class RichDataStreamSpec extends FlinkPipelineTestKit[Input, Prediction] with Pm
       val evalFunction = { (in: Input, model: PmmlModel) =>
         model.predict(BaseInput.toSparseVector(in, 2), None)
       }
-      run(Seq(Input(1.0, 3.0)), Seq(emptyPrediction), RichDataStreamSpec)(pipelineBuilder(None)(evalFunction))
+      executePipeline(Seq(Input(1.0, 3.0)))(pipelineBuilder(None)(evalFunction)) shouldBe Seq(emptyPrediction)
     }
 
     "Emit empty prediction if the model is not valid" in {
       val invalidModelSource = getPMMLSource(Source.KmeansPmmlEmpty)
 
       an[JobExecutionException] should be thrownBy {
-        run(Seq(defaultInput), Seq(emptyPrediction), RichDataStreamSpec)(
-          pipelineBuilder(Some(invalidModelSource))(defaultDenseEvalFunction))
+        executePipeline(Seq(defaultInput))(pipelineBuilder(Some(invalidModelSource))(defaultDenseEvalFunction)) shouldBe Seq(
+          emptyPrediction)
       }
     }
 
