@@ -24,10 +24,12 @@ import java.util.UUID
 import io.radicalbit.flink.pmml.scala.api.PmmlModel
 import io.radicalbit.flink.pmml.scala.models.control.{AddMessage, DelMessage, ServingMessage}
 import io.radicalbit.flink.pmml.scala.models.prediction.{Prediction, Score, Target}
-import io.radicalbit.flink.pmml.scala.utils.{FlinkSourcedPipelineTestKit, FlinkTestKitCompanion, PmmlLoaderKit}
+import io.radicalbit.flink.pmml.scala.utils.{FlinkSourcedPipelineTestKit, PmmlLoaderKit}
 import io.radicalbit.flink.pmml.scala.utils.models.{BaseInput, DynamicInput}
+import io.radicalbit.flink.streaming.spec.core.FlinkTestKitCompanion
 import org.apache.flink.runtime.client.JobExecutionException
 import org.apache.flink.streaming.api.scala._
+import org.scalatest.{Matchers, WordSpecLike}
 
 object RichConnectedStreamSpec extends FlinkTestKitCompanion[Prediction] {
 
@@ -40,9 +42,13 @@ object RichConnectedStreamSpec extends FlinkTestKitCompanion[Prediction] {
 
 class RichConnectedStreamSpec
     extends FlinkSourcedPipelineTestKit[DynamicInput, ServingMessage, Prediction]
+    with WordSpecLike
+    with Matchers
     with PmmlLoaderKit {
 
   import RichConnectedStreamSpec._
+
+  private implicit val companion = RichConnectedStreamSpec
 
   private val defaultPrediction = Prediction(Score(3.0))
   private val emptyPrediction = Prediction(Target.empty)
@@ -71,7 +77,7 @@ class RichConnectedStreamSpec
 
       val out = Seq(defaultPrediction)
 
-      run(in1, in2, out, RichConnectedStreamSpec)(pipeline)
+      executePipeline(in1, in2)(pipeline) shouldBe out
     }
 
     "compute the right prediction (-> event -> model -> event = empty prediction, default prediction)" in {
@@ -85,7 +91,7 @@ class RichConnectedStreamSpec
 
       val out = Seq(emptyPrediction, defaultPrediction)
 
-      run(in1, in2, out, RichConnectedStreamSpec)(pipeline)
+      executePipeline(in1, in2)(pipeline) shouldBe out
     }
 
     "compute the right prediction (-> model1 -> model2 -> event1 -> event2 = two predictions)" in {
@@ -106,7 +112,7 @@ class RichConnectedStreamSpec
 
       val out = Seq(defaultPrediction, emptyPrediction)
 
-      run(in1, in2, out, RichConnectedStreamSpec)(pipeline)
+      executePipeline(in1, in2)(pipeline) shouldBe out
     }
 
     "return the correct predictions (-> event1 -> model1 -> event2 -> model2 -> event1 -> event2 = two empty predictions and two predictions)" in {
@@ -129,7 +135,7 @@ class RichConnectedStreamSpec
         defaultPrediction
       )
 
-      run(in1, in2, output, RichConnectedStreamSpec)(pipeline)
+      executePipeline(in1, in2)(pipeline) shouldBe output
     }
 
     "return the correct predictions with only events coming" in {
@@ -143,7 +149,7 @@ class RichConnectedStreamSpec
 
       val out = Seq(emptyPrediction, emptyPrediction)
 
-      run(in1, in2, out, RichConnectedStreamSpec)(pipeline)
+      executePipeline(in1, in2)(pipeline) shouldBe out
     }
 
     "return the correct predictions with only models coming" in {
@@ -161,7 +167,7 @@ class RichConnectedStreamSpec
 
       val out = Seq.empty[Prediction]
 
-      run(in1, in2, out, RichConnectedStreamSpec)(pipeline)
+      executePipeline(in1, in2)(pipeline) shouldBe out
 
     }
 
@@ -175,7 +181,7 @@ class RichConnectedStreamSpec
 
       val out = Seq(emptyPrediction)
 
-      run(in1, in2, out, RichConnectedStreamSpec)(pipeline)
+      executePipeline(in1, in2)(pipeline) shouldBe out
     }
 
     "return EmptyScore if a DelMessage delete the current model" in {
@@ -194,7 +200,7 @@ class RichConnectedStreamSpec
 
       val out = Seq(defaultPrediction, emptyPrediction)
 
-      run(in1, in2, out, RichConnectedStreamSpec)(pipeline)
+      executePipeline(in1, in2)(pipeline) shouldBe out
     }
 
     "return Prediction if a DelMessage delete a not existing model" in {
@@ -213,7 +219,7 @@ class RichConnectedStreamSpec
 
       val out = Seq(defaultPrediction, defaultPrediction)
 
-      run(in1, in2, out, RichConnectedStreamSpec)(pipeline)
+      executePipeline(in1, in2)(pipeline) shouldBe out
     }
 
     "return Prediction on Add --> Delete --> Add pattern" in {
@@ -234,7 +240,7 @@ class RichConnectedStreamSpec
 
       val out = Seq(defaultPrediction, emptyPrediction, defaultPrediction)
 
-      run(in1, in2, out, RichConnectedStreamSpec)(pipeline)
+      executePipeline(in1, in2)(pipeline) shouldBe out
     }
 
     "return Prediction on Delete --> Add --> Delete pattern" in {
@@ -255,7 +261,7 @@ class RichConnectedStreamSpec
 
       val out = Seq(emptyPrediction, defaultPrediction, emptyPrediction)
 
-      run(in1, in2, out, RichConnectedStreamSpec)(pipeline)
+      executePipeline(in1, in2)(pipeline) shouldBe out
     }
 
     "discard ADD message on same Identifier (Add message with newer version needed here)." in {
@@ -276,7 +282,7 @@ class RichConnectedStreamSpec
 
       val out = Seq(defaultPrediction, defaultPrediction)
 
-      run(in1, in2, out, RichConnectedStreamSpec)(pipeline)
+      executePipeline(in1, in2)(pipeline) shouldBe out
     }
 
     "throw JobExecutionException if the model path cannot be loaded" in {
@@ -289,7 +295,7 @@ class RichConnectedStreamSpec
       val out = Seq(defaultPrediction)
 
       an[JobExecutionException] should be thrownBy {
-        run(in1, in2, out, RichConnectedStreamSpec)(pipeline)
+        executePipeline(in1, in2)(pipeline) shouldBe out
       }
     }
 
@@ -310,7 +316,7 @@ class RichConnectedStreamSpec
 
       val out = Seq(emptyPrediction)
 
-      run(in1, in2, out, RichConnectedStreamSpec)(customPipeline)
+      executePipeline(in1, in2)(pipeline) shouldBe out
     }
 
     "Emit empty prediction if the model is not valid" in {
@@ -324,7 +330,7 @@ class RichConnectedStreamSpec
       val out = Seq(emptyPrediction)
 
       an[JobExecutionException] should be thrownBy {
-        run(in1, in2, out, RichConnectedStreamSpec)(pipeline)
+        executePipeline(in1, in2)(pipeline) shouldBe out
       }
     }
 

@@ -21,15 +21,23 @@ package io.radicalbit.flink.pmml.scala
 
 import io.radicalbit.flink.pmml.scala.api.reader.ModelReader
 import io.radicalbit.flink.pmml.scala.models.prediction.{Prediction, Score, Target}
-import io.radicalbit.flink.pmml.scala.utils.{FlinkPipelineTestKit, FlinkTestKitCompanion, PmmlLoaderKit}
+import io.radicalbit.flink.pmml.scala.utils.PmmlLoaderKit
+import io.radicalbit.flink.streaming.spec.core.{FlinkPipelineTestKit, FlinkTestKitCompanion}
 import org.apache.flink.api.scala.ClosureCleaner
 import org.apache.flink.ml.math.{DenseVector, SparseVector, Vector}
 import org.apache.flink.runtime.client.JobExecutionException
 import org.apache.flink.streaming.api.scala._
+import org.scalatest.{Matchers, WordSpecLike}
 
 object QuickDataStreamSpec extends FlinkTestKitCompanion[(Prediction, Vector)]
 
-class QuickDataStreamSpec extends FlinkPipelineTestKit[Vector, (Prediction, Vector)] with PmmlLoaderKit {
+class QuickDataStreamSpec
+    extends FlinkPipelineTestKit[Vector, (Prediction, Vector)]
+    with WordSpecLike
+    with Matchers
+    with PmmlLoaderKit {
+
+  private implicit val companion = QuickDataStreamSpec
 
   private val defaultInput: Vector = DenseVector(1.0, 1.0, 1.0, 1.0)
   private val defaultSparseInput: Vector = SparseVector(4, Array(0, 1, 2, 3), Array(1.0, 1.0, 1.0, 1.0))
@@ -54,42 +62,42 @@ class QuickDataStreamSpec extends FlinkPipelineTestKit[Vector, (Prediction, Vect
     "return correct output sequence on heterogeneous input" in {
       val in: Seq[Vector] = Seq(defaultInput, defaultSparseInput)
       val out = Seq(defaultPrediction, sparsePrediction)
-      run(in, out, QuickDataStreamSpec)(pipelineBuilder(None))
+      executePipeline(in)(pipelineBuilder(None)) shouldBe out
     }
 
     "compute quick prediction with any dense input vector" in {
       val in: Seq[Vector] = Seq(defaultInput)
       val out = Seq(defaultPrediction)
 
-      run(in, out, QuickDataStreamSpec)(pipelineBuilder(None))
+      executePipeline(in)(pipelineBuilder(None)) shouldBe out
     }
 
     "compute quick predictions with any sparse input vector" in {
       val in: Seq[Vector] = Seq(defaultSparseInput)
       val out = Seq(sparsePrediction)
 
-      run(in, out, QuickDataStreamSpec)(pipelineBuilder(None))
+      executePipeline(in)(pipelineBuilder(None)) shouldBe out
     }
 
     "throw JobExecutionException if the model path cannot be loaded" in {
       val invalidSource = Source.NotExistingPath
 
       an[JobExecutionException] should be thrownBy {
-        run(Seq(defaultInput), Seq(defaultPrediction), QuickDataStreamSpec)(pipelineBuilder(Some(invalidSource)))
+        executePipeline(Seq(defaultInput))(pipelineBuilder(Some(invalidSource))) shouldBe Seq(defaultPrediction)
       }
     }
 
     "Emit empty prediction if the input is not valid" in {
       val shortInput: Vector = SparseVector(2, Array(0, 3), Array(1.0, 1.0))
 
-      run(Seq(shortInput), Seq((Prediction(Target.empty), shortInput)), QuickDataStreamSpec)(pipelineBuilder(None))
+      executePipeline(Seq(shortInput))(pipelineBuilder(None)) shouldBe Seq((Prediction(Target.empty), shortInput))
     }
 
     "Emit empty prediction if the model is not valid" in {
       val invalidModelSource = getPMMLSource(Source.KmeansPmmlEmpty)
 
       an[JobExecutionException] should be thrownBy {
-        run(Seq(defaultInput), Seq(emptyPrediction), QuickDataStreamSpec)(pipelineBuilder(Some(invalidModelSource)))
+        executePipeline(Seq(defaultInput))(pipelineBuilder(Some(invalidModelSource))) shouldBe Seq(emptyPrediction)
       }
     }
 

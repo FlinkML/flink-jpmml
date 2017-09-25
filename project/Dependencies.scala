@@ -38,7 +38,8 @@ object Dependencies {
       hadoop.common % "test" classifier "tests",
       hadoop.hdfs % "test" classifier "tests",
       hadoop.mincluster % "test",
-      scalatest.scalatest % Test
+      scalatest.scalatest % Test,
+      `flink-streaming-spec`.core % Test
     )
   }
 
@@ -99,6 +100,12 @@ object Dependencies {
     lazy val namespace = "org.scalatest"
     lazy val version = "3.0.1"
     lazy val scalatest = namespace %% "scalatest" % version
+  }
+
+  private object `flink-streaming-spec` {
+    lazy val namespace = "io.radicalbit"
+    lazy val version = "0.0.1"
+    lazy val core = namespace %% "flink-streaming-spec" % version
   }
 
 }
