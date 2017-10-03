@@ -1,6 +1,8 @@
 [![Build Status](https://travis-ci.org/FlinkML/flink-jpmml.svg)](https://travis-ci.org/FlinkML/flink-jpmml)
 [<img src="https://img.shields.io/maven-central/v/io.radicalbit/flink-jpmml-scala_2.10.svg?label=latest%20release%20for%202.10"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22flink-jpmml-scala_2.10%22)
 [<img src="https://img.shields.io/maven-central/v/io.radicalbit/flink-jpmml-scala_2.11.svg?label=latest%20release%20for%202.11"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22flink-jpmml-scala_2.11%22)
+[![codecov](https://codecov.io/github/FlinkML/flink-jpmml/coverage.svg?branch=master)](https://codecov.io/github/FlinkML/flink-jpmml?branch=master)
+[![License](https://img.shields.io/github/license/FlinkML/flink-jpmml.svg)](LICENSE)
 
 # flink-jpmml 
 
