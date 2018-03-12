@@ -50,7 +50,7 @@ class QuickDataStreamSpec
     val reader = ModelReader(source getOrElse getPMMLSource(Source.KmeansPmml))
 
     (in: DataStream[Vector]) =>
-      in.evaluate(reader)
+      in.quickEvaluate(reader)
   }
 
   "QuickDataStream" should {
