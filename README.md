@@ -218,7 +218,7 @@ so if the model can't manage a prediction it will return a `EmptyPrediction` val
 ```
 ...
 val vectorStream: DataStream[Vector] = events.map(event => vectorize(event))
-val predictions: DataStream[Prediction, Vector] = vectorStream.evaluate(reader)
+val predictions: DataStream[Prediction, Vector] = vectorStream.quickEvaluate(reader)
 
 predictions.map(_.target).print()
 
