@@ -135,7 +135,7 @@ package object scala {
       * @param modelReader The reader instance coupled to model source path.
       * @return (Prediction, V)
       */
-    def evaluate(modelReader: ModelReader): DataStream[(Prediction, V)] =
+    def quickEvaluate(modelReader: ModelReader): DataStream[(Prediction, V)] =
       new RichDataStream[V](stream).evaluate(modelReader) { (vec, model) =>
         val result: Prediction = model.predict(vec, None)
         (result, vec)

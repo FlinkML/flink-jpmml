@@ -39,13 +39,14 @@ object QuickEvaluateKmeans extends EnsureParameters {
     val irisDataStream = irisSource(env, None)
 
     //Convert iris to DenseVector
-    val irisToVector = irisDataStream.map(_.toVector)
+    val irisToVector = irisDataStream.map(iris => iris.toVector)
 
     //Load PMML model
     val model = ModelReader(inputModel)
 
-    //Quick evaluate
-    irisToVector.evaluate(model).writeAsText(output)
+    irisToVector
+      .quickEvaluate(model)
+      .writeAsText(output)
 
     env.execute("Quick evaluator Clustering")
   }
