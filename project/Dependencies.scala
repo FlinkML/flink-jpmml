@@ -54,7 +54,7 @@ object Dependencies {
 
   private object flink {
     lazy val namespace = "org.apache.flink"
-    lazy val version = "1.3.3"
+    lazy val version = "1.6.2"
     lazy val core = namespace % "flink-core" % version
     lazy val scalaCore = namespace %% "flink-scala" % version
     lazy val streaming = namespace %% "flink-streaming-scala" % version
@@ -104,7 +104,7 @@ object Dependencies {
 
   private object `flink-streaming-spec` {
     lazy val namespace = "io.radicalbit"
-    lazy val version = "0.1.0"
+    lazy val version = "0.3.0"
     lazy val core = namespace %% "flink-streaming-spec" % version
   }
 

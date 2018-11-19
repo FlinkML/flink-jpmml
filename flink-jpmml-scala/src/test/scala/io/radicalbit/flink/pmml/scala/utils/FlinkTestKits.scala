@@ -24,12 +24,12 @@ import io.radicalbit.flink.streaming.spec.core.FlinkTestKitCompanion
 import org.apache.flink.api.common.typeinfo.TypeInformation
 import org.apache.flink.streaming.api.functions.sink.SinkFunction
 import org.apache.flink.streaming.api.scala._
-import org.apache.flink.streaming.util.StreamingMultipleProgramsTestBase
+import org.apache.flink.test.util.AbstractTestBase
 
 import scala.collection.mutable
 import scala.reflect.ClassTag
 
-trait FlinkSourcedPipelineTestKit[IN1, IN2, OUT] extends StreamingMultipleProgramsTestBase {
+trait FlinkSourcedPipelineTestKit[IN1, IN2, OUT] extends AbstractTestBase {
 
   def executePipeline[IN1: TypeInformation: ClassTag, IN2: TypeInformation: ClassTag](
       in1: Seq[(Long, IN1)],
