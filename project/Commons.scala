@@ -26,6 +26,9 @@ object Commons {
 
   val settings: Seq[Def.Setting[_]] = Seq(
     organization := "io.radicalbit",
-    scalaVersion in ThisBuild := "2.11.8"
+    scalaVersion in ThisBuild := "2.11.12",
+    resolvers in ThisBuild ++= Seq(
+      "Radicalbit Releases" at "https://tools.radicalbit.io/artifactory/libs-release-local/"
+    )
   )
 }
