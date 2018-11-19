@@ -17,13 +17,13 @@ scenario.
 
 In order to getting started, you only need
 * any well-known version of a PMML model (**3.2** or above)
-* flink-jpmml is tested with the latest Flink (i.e. 1.3.2), but any working Apache Flink version 
+* flink-jpmml is tested with the latest Flink (i.e. 1.3.3), but any working Apache Flink version 
 ([repo](https://github.com/apache/flink)) should work properly.
 
 ## Adding `flink-jpmml` dependency
 * if you employ sbt add the following dependecy to your project:
     * Snapshot: `"io.radicalbit" %% "flink-jpmml-scala" % "0.7.0-SNAPSHOT"`
-    * Stable: `"io.radicalbit" %% "flink-jpmml-scala" % "0.6.1"`
+    * Stable: `"io.radicalbit" %% "flink-jpmml-scala" % "0.6.2"`
 
 * For [maven](https://maven.apache.org/) users instead:
     * Snapshot
@@ -42,7 +42,7 @@ In order to getting started, you only need
         <dependency>
             <groupId>io.radicalbit</groupId>
             <artifactId>flink-jpmml-scala</artifactId>
-            <version>0.6.1</version>
+            <version>0.6.2</version>
         </dependency>
     </dependencies>
     ```
