@@ -28,7 +28,7 @@ object Commons {
     organization := "io.radicalbit",
     scalaVersion in ThisBuild := "2.11.12",
     resolvers in ThisBuild ++= Seq(
-      "Radicalbit Releases" at "https://tools.radicalbit.io/artifactory/libs-release-local/"
+      "Radicalbit Releases" at "https://tools.radicalbit.io/artifactory/public-release/"
     )
   )
 }
