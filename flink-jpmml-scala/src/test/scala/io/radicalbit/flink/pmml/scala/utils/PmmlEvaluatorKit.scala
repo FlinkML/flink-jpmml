@@ -40,8 +40,8 @@ trait PmmlEvaluatorKit {
 
   final protected def buildExpectedPreparedMap(in: Map[String, Any], keys: Seq[String], replaceValue: Option[Double]) =
     keys.map {
-      case k if in.contains(k) => new FieldName(k) -> FieldValueUtil.create(null, null, in(k))
-      case emptyKey => new FieldName(emptyKey) -> FieldValueUtil.create(null, null, replaceValue.orNull)
+      case k if in.contains(k) => new FieldName(k) -> FieldValueUtil.create(in(k))
+      case emptyKey => new FieldName(emptyKey) -> FieldValueUtil.create(replaceValue.orNull)
     } toMap
 
 }

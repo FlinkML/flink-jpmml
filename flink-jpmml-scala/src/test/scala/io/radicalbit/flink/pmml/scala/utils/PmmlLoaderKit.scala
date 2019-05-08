@@ -20,8 +20,7 @@
 package io.radicalbit.flink.pmml.scala.utils
 
 import org.dmg.pmml.PMML
-import org.jpmml.model.{ImportFilter, JAXBUtil}
-import org.xml.sax.InputSource
+import org.jpmml.model.PMMLUtil
 
 trait PmmlLoaderKit {
 
@@ -42,9 +41,6 @@ trait PmmlLoaderKit {
   final protected def getPMMLSource(path: String): String =
     getClass.getResource(path).getPath
 
-  final protected def getPMMLResource(path: String): PMML = {
-    val source = scala.io.Source.fromURL(getClass.getResource(path)).reader()
-    JAXBUtil.unmarshalPMML(ImportFilter.apply(new InputSource(source)))
-  }
+  final protected def getPMMLResource(path: String): PMML = PMMLUtil.unmarshal(getClass.getResourceAsStream(path))
 
 }
