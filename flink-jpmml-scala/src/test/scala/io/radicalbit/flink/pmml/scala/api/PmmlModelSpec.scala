@@ -313,7 +313,7 @@ class PmmlModelSpec extends WordSpec with Matchers with PmmlLoaderKit with PmmlE
   "Pipeline.prepareAndEmit" should {
 
     "emit valid prepared value if the input is correct" in {
-      val v = FieldValueUtil.create(null.asInstanceOf[DataType], null.asInstanceOf[OpType], 1.0)
+      val v = FieldValueUtil.create(1.0)
       val d = createDataField()
       model.prepareAndEmit(Success(v), d.getName) shouldBe (d.getName, v)
     }

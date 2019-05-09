@@ -36,7 +36,7 @@ lazy val root = project
   .enablePlugins(ScalaUnidocPlugin)
   .settings(
     name := "flink-jpmml",
-    crossScalaVersions := Seq("2.10.6", "2.11.11"),
+    crossScalaVersions := Seq("2.11.12"),
     unidocProjectFilter in (ScalaUnidoc, unidoc) := inAnyProject -- inProjects(`flink-jpmml-examples`,
                                                                                `flink-jpmml-assets`)
   )

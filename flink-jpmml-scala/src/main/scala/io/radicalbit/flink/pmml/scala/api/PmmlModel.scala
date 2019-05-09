@@ -26,11 +26,11 @@ import io.radicalbit.flink.pmml.scala.api.exceptions.{InputValidationException, 
 import io.radicalbit.flink.pmml.scala.api.pipeline.Pipeline
 import io.radicalbit.flink.pmml.scala.api.reader.ModelReader
 import io.radicalbit.flink.pmml.scala.models.prediction.Prediction
+import org.apache.commons.io.input.ReaderInputStream
 import org.apache.flink.ml.math.Vector
 import org.dmg.pmml.FieldName
 import org.jpmml.evaluator._
-import org.jpmml.model.{ImportFilter, JAXBUtil}
-import org.xml.sax.InputSource
+import org.jpmml.model.{PMMLUtil => MarshalUtil}
 
 import scala.collection.JavaConversions._
 import scala.util.Try
@@ -54,11 +54,11 @@ object PmmlModel {
     val readerFromFs = reader.buildDistributedPath
     val result = fromFilteredSource(readerFromFs)
 
-    new PmmlModel(Evaluator(evaluatorInstance.newModelEvaluator(JAXBUtil.unmarshalPMML(result))))
+    new PmmlModel(Evaluator(evaluatorInstance.newModelEvaluator(result)))
   }
 
   private def fromFilteredSource(PMMLPath: String) =
-    JAXBUtil.createFilteredSource(new InputSource(new StringReader(PMMLPath)), new ImportFilter())
+    MarshalUtil.unmarshal(new ReaderInputStream(new StringReader(PMMLPath)))
 
   /** It provides a new instance of the [[PmmlModel]] with [[EmptyEvaluator]]
     *
@@ -93,7 +93,7 @@ class PmmlModel(private[api] val evaluator: Evaluator) extends Pipeline {
     *
     * - `validateInput` validates the input to be conform to PMML model size
     *
-    * - `prepareInput` prepares the input in full compliance to [[org.jpmml.evaluator.EvaluatorUtil.prepare]] JPMML method
+    * - `prepareInput` prepares the input in full compliance to [[InputField]] preparation JPMML method
     *
     * - `evaluateInput` evaluates the input against inner PMML model instance and returns a Java Map output
     *
@@ -134,7 +134,7 @@ class PmmlModel(private[api] val evaluator: Evaluator) extends Pipeline {
   }
 
   /** Binds each field with input value and prepare the record to be evaluated
-    * by [[EvaluatorUtil.prepare]] method.
+    * by [[InputField]] preparation method.
     *
     * @param input Validated input as a [[Map]] keyed by field name
     * @param replaceNaN Optional replace value in case of missing values
@@ -146,7 +146,7 @@ class PmmlModel(private[api] val evaluator: Evaluator) extends Pipeline {
 
     activeFields.map { field =>
       val rawValue = input.get(field.getName.getValue).orElse(replaceNaN).orNull
-      prepareAndEmit(Try { EvaluatorUtil.prepare(field, rawValue) }, field.getName)
+      prepareAndEmit(Try { field.prepare(rawValue) }, field.getName)
     }.toMap
 
   }
@@ -164,7 +164,7 @@ class PmmlModel(private[api] val evaluator: Evaluator) extends Pipeline {
     * @param evaluationResult outcome from JPMML evaluation
     * @return The prediction value as a [Double]
     */
-  private[api] def extractTarget(evaluationResult: java.util.Map[FieldName, _]): Double = {
+  private[api] def extractTarget(evaluationResult: util.Map[FieldName, _]): Double = {
     val targets = extractTargetFields(evaluationResult)
 
     targets.headOption.flatMap {

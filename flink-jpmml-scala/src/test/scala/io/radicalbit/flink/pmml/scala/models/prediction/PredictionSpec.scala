@@ -69,7 +69,7 @@ class PredictionSpec extends WordSpec with Matchers {
     }
 
     "return None if onFailedPrediction is active and EvaluationException" in {
-      throwableFunc(new EvaluationException) {
+      throwableFunc(new EvaluationException("")) {
         case e: Throwable => Prediction.onFailedPrediction(e)
       } shouldBe Prediction(EmptyScore)
     }

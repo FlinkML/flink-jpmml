@@ -65,7 +65,7 @@ object Dependencies {
 
   private object jpmml {
     lazy val namespace = "org.jpmml"
-    lazy val version = "1.3.9"
+    lazy val version = "1.4.7"
     lazy val evaluator = namespace % "pmml-evaluator" % version
   }
 
@@ -84,7 +84,7 @@ object Dependencies {
 
   private object hadoop {
     lazy val namespace = "org.apache.hadoop"
-    lazy val version = "2.3.0"
+    lazy val version = "2.8.3"
     lazy val hdfs = namespace % "hadoop-hdfs" % version
     lazy val common = namespace % "hadoop-common" % version
     lazy val mincluster = namespace % "hadoop-minicluster" % version
