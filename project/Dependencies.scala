@@ -65,7 +65,7 @@ object Dependencies {
 
   private object jpmml {
     lazy val namespace = "org.jpmml"
-    lazy val version = "1.4.6"
+    lazy val version = "1.4.7"
     lazy val evaluator = namespace % "pmml-evaluator" % version
   }
 
